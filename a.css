@@ -1,0 +1,130 @@
+
+*{
+    margin: 0;
+    padding: 0;
+}
+.featured-categories-section {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+.featured-categories-title {
+    padding: 0 10vw;
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: capitalize;
+    margin-top: 0;
+}
+
+.featured-categories-container {
+    padding: 10px 10vw;
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+
+.featured-categories-container::-webkit-scrollbar {
+    display: none;
+}
+
+.featured-category-card {
+    flex: 0 0 auto;
+    width: 250px;
+    height: 450px;
+    margin-right: 40px;
+}
+
+.featured-category-image {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    margin-right: 200%;
+    margin-left: -55%;
+}
+
+.featured-category-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.featured-card-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+    width: 90%;
+    text-transform: capitalize;
+    border: none;
+    outline: none;
+    background: #fff;
+    border-radius: 5px;
+    transition: 0.5s;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.featured-category-card:hover .featured-card-btn {
+    opacity: 1;
+}
+
+.featured-card-btn:hover {
+    background: #ff7d7d;
+    color: #fff;
+}
+
+.featured-category-info {
+    width: 100%;
+    height: 100px;
+    padding-top: 10px;
+    margin-left: -55%;
+}
+
+.featured-categories-section hr {
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+.featured-category-name {
+    text-transform: uppercase;
+}
+
+.featured-pre-btn,
+.featured-nxt-btn {
+    border: none;
+    width: 10vw;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
+    cursor: pointer;
+    z-index: 8;
+}
+
+.featured-pre-btn {
+    left: 0;
+    transform: rotate(180deg);
+}
+
+.featured-nxt-btn {
+    right: 0;
+}
+
+.featured-pre-btn img,
+.featured-nxt-btn img {
+    opacity: 0.2;
+}
+
+.featured-pre-btn:hover img,
+.featured-nxt-btn:hover img {
+    opacity: 1;
+}
