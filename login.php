@@ -50,6 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         body {
             font-family: Arial, sans-serif;
         }
+        h1{
+            position: relative;
+            top:-4vh;
+        }
         .container {
             display: flex;
             flex-direction: column;
@@ -142,13 +146,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="role">Role</label>
                 <select id="role" name="role" required>
                     <option value="customer">Customer</option>
                     <option value="vendor">Trader</option>
                 </select>
-            </div>
+            </div> -->
             <a href="forgot_password.php" style="text-align: left;">Forgot password</a>
             <button type="submit" class="submit-btn">Login</button>
         </form>
