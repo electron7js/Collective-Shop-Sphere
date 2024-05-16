@@ -4,7 +4,8 @@
     padding: 0;
 }
 header{
-    min-height: 100vh;
+    display: flexbox;
+    min-height: 10vh;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   
 
 }
@@ -39,7 +40,7 @@ header{
 }
 nav a:after{
     content: "";
-    position: absolute;
+    position: relative;
     background-color: black;
     height: 3px;
     width: 0%;
@@ -135,11 +136,13 @@ nav ul li img {
     margin-right: 10px; 
 }
 .search-form {
-    position: absolute;
-    top: 200px; 
-    left: 50%;
-    transform: translateX(-50%);
-    /* border-bottom: 1px solid #000; */
+    position: relative;
+    top: 0vh; 
+    z-index: 100;
+
+    /* left: 50%; */
+    /* transform: translateX(-50%);
+    border-bottom: 1px solid #000; */
 }
 .search {
     width: max-content;
@@ -149,6 +152,7 @@ nav ul li img {
     border-radius: 28px;
     background: #f6f6f6;
     transition: box-shadow 0.25s;
+    z-index: 99999999;
     
 }
 .search:focus-within{
@@ -171,8 +175,8 @@ nav ul li img {
 
 .search-form .line{
     align-items: right;
-    background-color: white;
-    border: 1px solid white;
+    background-color: none;
+    border: 1px solid none;
     padding: 20px;
     margin-bottom: 20px;
 }
@@ -184,6 +188,7 @@ nav ul li img {
     width: 100%;
     margin-top: 60px; /* Adjust this value as needed */
     border: 0;
+    z-index: -300;
     border-top: 1px solid #c9c7c7;
 }
 
@@ -218,6 +223,8 @@ footer {
 }
 
 .footerContainer {
+    background-color: #EEE4E1;
+
     width: 100%;
     padding: 70px 30px 20px;
     display: flex;
@@ -553,6 +560,7 @@ footer {
 
 .about-1{
     margin: 30px;
+    margin-top: 0px;
     padding: 5px;
 }
 .about-1 h1{
@@ -1137,11 +1145,23 @@ footer {
 .ourshops{
     display: block;
     text-align: center;
-    font-size: 4rem;
+    font-size: 3rem;
+    padding: 3vh;
 }
 
+.searchsection{
+    display:block;
+    position: absolute;
+    margin-top: 0vh;
+    left: 35%;
+    top: 22vh;
+}
 
+.maincontainer{
+    display: block;
 
+    margin-top: 100vh;
+}
 
 
 
