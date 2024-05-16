@@ -61,16 +61,17 @@ include 'header.php';
         <button class="nxt-btn"><img src="images/arrow.png" alt=""></button>
         <div class="product-container">
             <?php while ($product = oci_fetch_assoc($product_stmt)): ?>
-                <div class="product-card">
+                <a class="product-card" href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none; color:black;" class="item">
+
                     <div class="product-image">
                         <img src="<?php echo $product['IMAGE']; ?>" class="product-thumb" alt="">
                         <button class="card-btn">add to cart</button>
                     </div>
-                    <div class="product-info">
+                    <div class="product-info" >
                         <h2 class="product-brand"><?php echo $product['NAME']; ?></h2>
                         <span class="price">$<?php echo number_format($product['PRICE'], 2); ?></span>
-                    </div>
                 </div>
+            </a>
             <?php endwhile; ?>
         </div>
     </section>
@@ -93,7 +94,7 @@ include 'header.php';
                         </div>
                         <div class="row"> <!-- Close current row and start a new row after every 3 items -->
                         <?php endif; ?>
-                        <a class="item">
+                        <a href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none" class="item">
                             <img src="<?php echo $product['IMAGE']; ?>" alt="">
                             <h2><?php echo $product['NAME']; ?></h2>
                             <div class="price">$<?php echo number_format($product['PRICE'], 2); ?></div>

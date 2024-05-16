@@ -132,7 +132,7 @@ include 'header.php';
                         </div>
                         <div class="row"> <!-- Close current row and start a new row after every 3 items -->
                         <?php endif; ?>
-                        <a class="item">
+                        <a  href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none; color:black;" class="item">
                             <img src="<?php echo $product['IMAGE']; ?>" alt="">
                             <h2><?php echo $product['NAME']; ?></h2>
                             <div class="price">$<?php echo number_format($product['PRICE'], 2); ?></div>

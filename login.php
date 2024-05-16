@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-bottom: 5px;
         }
         .form-group input {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -157,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="submit-btn">Login</button>
         </form>
         <div class="signup-link">
-            Don't have an account? <a href="signup.php">Sign Up</a>
+            Don't have an account? <a href="register">Sign Up</a>
         </div>
     </div>
 </div>

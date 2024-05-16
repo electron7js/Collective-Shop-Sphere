@@ -104,7 +104,7 @@ include 'header.php';
                     </div>
                     <div class="row-product"> <!-- Close current row and start a new row after every 3 items -->
                     <?php endif; ?>
-                    <a class="item">
+                    <a  href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none; color:black;" class="item">
                         <div class="inside">
                             <img src="<?php echo $product['IMAGE']; ?>" alt="">
                         </div>
