@@ -116,6 +116,10 @@ oci_execute($stmt);
         .main-container{
             min-height:60vh;
         }
+        .product-text{
+            text-align:left;
+            width: 10rem;
+        }
     </style>
 </head>
 <body>
@@ -126,7 +130,7 @@ oci_execute($stmt);
     <?php while ($product = oci_fetch_assoc($stmt)): ?>
         <div class="wishlist-item">
             <img src="<?php echo $product['IMAGE']; ?>" alt="<?php echo $product['NAME']; ?>">
-            <div>
+            <div class="product-text">
                 <h2><?php echo $product['NAME']; ?></h2>
                 <div class="price">$<?php echo number_format($product['PRICE'], 2); ?></div>
             </div>

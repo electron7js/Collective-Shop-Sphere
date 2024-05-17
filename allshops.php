@@ -104,7 +104,7 @@ include 'header.php';
                     </div>
                     <div class="row-product"> <!-- Close current row and start a new row after every 3 items -->
                     <?php endif; ?>
-                    <a  href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none; color:black;" class="item">
+                    <a style="text-decoration:none; color:black;" class="item">
                         <div class="inside">
                             <img src="<?php echo $product['IMAGE']; ?>" alt="">
                         </div>
@@ -118,7 +118,7 @@ include 'header.php';
                                     <button class="submit">Add to Cart</button>
                                 </div>
                                 <div class="btn-shop1-right">
-                                    <button class="submit">Add to Wishlist</button>
+                                    <button onclick="addToWishlist(<?php echo $product['PRODUCTID']; ?>)"class="submit">Add to Wishlist</button>
                                 </div>
                             </div>
                         </div>
@@ -142,6 +142,8 @@ include 'footer.php';
 ?>
 
     <script src="script.js"></script>
+    <script src="wishlist.js"></script>
+
 </body>
 
 </html>

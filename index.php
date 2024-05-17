@@ -17,6 +17,15 @@
             padding: 0px;
             overflow-x: hidden;
         }
+        
+        .cart-btn{
+            position: relative;
+            top:-9vh;
+        }
+
+        .wishlist-btn{
+
+        }
     </style>
 </head>
 
@@ -63,17 +72,23 @@ include 'header.php';
         <button class="nxt-btn"><img src="images/arrow.png" alt=""></button>
         <div class="product-container">
             <?php while ($product = oci_fetch_assoc($product_stmt)): ?>
-                <a class="product-card" href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none; color:black;" class="item">
+                <div class="product-card" style="text-decoration:none; color:black;" class="item">
 
                     <div class="product-image">
-                        <img src="<?php echo $product['IMAGE']; ?>" class="product-thumb" alt="">
-                        <button class="card-btn">add to cart</button>
+                        <a  href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>">
+                        <img src="<?php echo $product['IMAGE']; ?>" class="product-thumb" alt=""></a>
+                        <button class="card-btn cart-btn">Add to cart</button>
+                        <button class="card-btn wishlist-button" onclick="addToWishlist(<?php echo $product['PRODUCTID']; ?>)"  >Add to Wishlist</button>
+
                     </div>
                     <div class="product-info" >
+                    <a  href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none;color:black;">
+
                         <h2 class="product-brand"><?php echo $product['NAME']; ?></h2>
+                        </a>
                         <span class="price">$<?php echo number_format($product['PRICE'], 2); ?></span>
                 </div>
-            </a>
+            </div>
             <?php endwhile; ?>
         </div>
     </section>
@@ -138,6 +153,8 @@ include 'footer.php';
 ?>
 
     <script src="script.js"></script>
+    <script src="wishlist.js"></script>
+
 </body>
 
 </html>
