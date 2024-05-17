@@ -3,7 +3,7 @@ session_start();
 
 // Include the config.php file for database connection
 include 'config.php';
-
+include 'functions.php';
 // Check if user is logged in
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");

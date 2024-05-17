@@ -62,3 +62,36 @@ function removeFromWishlist($userid, $productid) {
     oci_close($conn);
     return false;
 }
+
+function removeFromBasket($userid, $productid) {
+    include 'config.php';
+
+    // Ensure the database connection is established
+
+    // Get the basket ID for the user
+    $query = "SELECT basketid FROM Basket WHERE userid = :userid";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':userid', $userid);
+    oci_execute($stmt);
+    $basket = oci_fetch_assoc($stmt);
+
+    if ($basket) {
+        $basketid = $basket['BASKETID'];
+
+        // Delete the product from the Product_Basket table
+        $query = "DELETE FROM Product_Basket WHERE productid = :productid AND basketid = :basketid";
+        $stmt = oci_parse($conn, $query);
+        oci_bind_by_name($stmt, ':productid', $productid);
+        oci_bind_by_name($stmt, ':basketid', $basketid);
+        $result = oci_execute($stmt);
+
+        // Close the database connection
+        oci_close($conn);
+
+        return $result ? true : false;
+    }
+
+    // Close the database connection
+    oci_close($conn);
+    return false;
+}
