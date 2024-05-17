@@ -24,7 +24,7 @@ if (session_status() == PHP_SESSION_NONE) {
             <li class="cart-icon"><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
         </ul>   
         <ul>
-            <li><a href="index.php"><img src="images/logo.png" alt="Collective Shop Sphere"></a></li>
+            <li><a class="logo" href="index.php"><img src="images/logo.png" alt="Collective Shop Sphere"></a></li>
             <li class="hideOnMobile"><a href="index.php">Home</a></li>
             <li class="hideOnMobile"><a href="about.php">About</a></li>
             <li class="hideOnMobile"><a href="shop.php">Shop</a></li>

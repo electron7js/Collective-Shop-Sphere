@@ -410,3 +410,7 @@ footer {
 }
 
 
+.logo{
+    position: relative;
+    top:8vh;
+}
