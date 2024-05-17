@@ -15,24 +15,24 @@ if (session_status() == PHP_SESSION_NONE) {
             <?php if (isset($_SESSION['username'])): ?>
                 <li><a href="dashboard.php">Dashboard</a></li>
                 <li><a href="logout.php">Logout</a></li>
+                <li><a href="wishlist.php">My wishlist</a></li>
 
             <?php else: ?>
-                <li><a href="help.php">Help</a></li>
                 <li><a href="login.php">Login</a></li>
                 <li><a href="register.php">Register</a></li>
             <?php endif; ?>
             <li class="cart-icon"><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
         </ul>   
         <ul>
-            <li><a href="#"><img src="images/logo.png" alt="Collective Shop Sphere"></a></li>
+            <li><a href="index.php"><img src="images/logo.png" alt="Collective Shop Sphere"></a></li>
             <li class="hideOnMobile"><a href="index.php">Home</a></li>
             <li class="hideOnMobile"><a href="about.php">About</a></li>
             <li class="hideOnMobile"><a href="shop.php">Shop</a></li>
             <?php if (isset($_SESSION['username'])): ?>
                 <li class="hideOnMobile"><a href="dashboard.php"><?php echo htmlspecialchars($_SESSION['username']); ?>'s<br> Dashboard</a></li>
                 <li class="hideOnMobile"><a href="logout.php">Logout</a></li>
+                <li><a href="wishlist.php">My wishlist</a></li>
             <?php else: ?>
-                <li class="hideOnMobile"><a href="help.php">Help</a></li>
                 <li class="hideOnMobile"><a href="login.php">Login</a></li>
                 <li class="hideOnMobile"><a href="register.php">Register</a></li>
             <?php endif; ?>

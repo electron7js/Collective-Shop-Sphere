@@ -220,7 +220,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p style="display: block;"> I hereby accept all the terms and conditions. </p>
                 </div>
                 <button type="submit" class="submit-btn">Register</button>
-                <button type="button" class="submit-btn" onclick="window.location.href='register_customer.php'">Register as a Customer</button>
+                <button type="button" class="submit-btn" onclick="window.location.href='register.php'">Register as a Customer</button>
             </div>
         </form>
         <p>Already have an Account? <a href="login.php">login</a></p>

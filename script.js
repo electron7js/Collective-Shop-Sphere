@@ -58,4 +58,3 @@ featuredContainers.forEach((item, i) => {
         item.scrollLeft -= containerWidth;
     });
 });
-

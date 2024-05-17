@@ -72,6 +72,8 @@ oci_close($conn);
     </style>
 </head>
 <body>
+<script src="wishlist.js"></script>
+
 <?php include 'header.php'; ?>
 
 <form class="search-form">
@@ -111,7 +113,7 @@ oci_close($conn);
             <div class="quantity">
                 <div class="sub-btn" >
                     <button class="submit" style="position:relative; left:-1rem;">Add to Cart</button>
-                    <button class="wishlist" style="position:relative; left:1rem;">Add to Wishlist</button>
+                    <button class="wishlist" onclick="addToWishlist(<?php echo $product['PRODUCTID']; ?>)" style="position:relative; left:1rem;">Add to Wishlist</button>
                 </div>
             </div>
         </div>
