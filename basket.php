@@ -19,7 +19,7 @@ oci_execute($stmt);
 $user = oci_fetch_assoc($stmt);
 $userid = $user['USERID'];
 
-// Fetch products in the cart
+// Fetch products in the basket
 $query = "SELECT p.productid, p.name, p.price, p.image, pb.quantity FROM Product p
           JOIN Product_Basket pb ON p.productid = pb.productid
           JOIN Basket b ON pb.basketid = b.basketid
@@ -45,7 +45,7 @@ oci_close($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart - Collective Shop Sphere</title>
+    <title>Shopping Basket - Collective Shop Sphere</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -64,7 +64,7 @@ oci_close($conn);
     align-content: flex-end;
     align-items: flex-start;
         }
-        .cart-body {
+        .basket-body {
             width: 95%;
             margin: 50px auto;
             padding: 20px;
@@ -72,7 +72,7 @@ oci_close($conn);
             border-radius: 10px;
             background-color: #f9f9f9;
         }
-        .cart-items{
+        .basket-items{
             min-height:60vh;
 
         }
@@ -148,7 +148,7 @@ oci_close($conn);
             width: 100%;
             object-fit:contain;
         }
-        .top-cart{
+        .top-basket{
             width: 100%;
             align-self: start;
         }
@@ -196,12 +196,12 @@ oci_close($conn);
 <body>
 <?php include 'header.php'; ?>
 <div class="container">
-    <div class="top-cart">
-<h1 style="font-family:Segoe UI; font-weight:350;margin:1rem;font-size:2.5rem;">Shopping Cart</h1>
+    <div class="top-basket">
+<h1 style="font-family:Segoe UI; font-weight:350;margin:1rem;font-size:2.5rem;">Shopping Basket</h1>
 <hr>
 </div>
-<div class="cart-body">
-    <div class="cart-items">
+<div class="basket-body">
+    <div class="basket-items">
     <?php foreach ($products as $product): ?>
         <div class="product-card">
             <div class="product-image">
@@ -221,7 +221,7 @@ oci_close($conn);
                 </div>
             </div>
             <div class="actions">
-                <button class="remove-btn" style="background-color: #a77364; border: none; padding: 10px 20px; color: white; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; border-radius: 0; width: 7rem;" onclick="removeFromCart(<?php echo $product['PRODUCTID']; ?>) ">Remove from cart</button>
+                <button class="remove-btn" style="background-color: #a77364; border: none; padding: 10px 20px; color: white; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; border-radius: 0; width: 7rem;" onclick="removeFromBasket(<?php echo $product['PRODUCTID']; ?>) ">Remove from basket</button>
             </div>
         </div>
     <?php endforeach; ?>
@@ -241,50 +241,7 @@ oci_close($conn);
 
 <?php include 'footer.php'; ?>
 
-<script>
-function updateQuantity(productId, quantity) {
-    fetch('update_cart_quantity.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ product_id: productId, quantity: quantity })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload(); // Refresh the page to update the total price
-        } else {
-            alert('Failed to update quantity.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while updating the quantity.');
-    });
-}
-
-function removeFromCart(productId) {
-    fetch('remove_from_cart.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ product_id: productId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload(); // Refresh the page to update the cart
-        } else {
-            alert('Failed to remove product from cart.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while removing the product from the cart.');
-    });
-}
+<script src="basket.js">
 </script>
 
 </body>
