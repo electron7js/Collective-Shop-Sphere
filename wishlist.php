@@ -101,14 +101,15 @@ oci_execute($stmt);
         .wishlist-item .actions button {
             margin: 5px 0;
             padding: 10px;
-            background-color: #28a745;
+            background-color: #cda850;
             border: none;
             border-radius: 5px;
             color: white;
             font-size: 16px;
         }
         .wishlist-item .actions button.remove {
-            background-color: #dc3545;
+            background-color: #eee4e1;
+            color:#525252;
         }
         .wishlist-item .actions button:hover {
             opacity: 0.9;
@@ -120,6 +121,7 @@ oci_execute($stmt);
             text-align:left;
             width: 10rem;
         }
+
     </style>
 </head>
 <body>
@@ -135,7 +137,7 @@ oci_execute($stmt);
                 <div class="price">$<?php echo number_format($product['PRICE'], 2); ?></div>
             </div>
             <div class="actions">
-                <button onclick="addToCart(<?php echo $product['PRODUCTID']; ?>)">Add To Cart</button>
+                <button onclick="addToBasket(<?php echo $product['PRODUCTID']; ?>)">Add To Cart</button>
                 <button class="remove" onclick="removeFromWishlist(<?php echo $product['PRODUCTID']; ?>)">Remove from Wishlist</button>
             </div>
         </div>
@@ -145,25 +147,6 @@ oci_execute($stmt);
 <?php include 'footer.php'; ?>
 
 <script src="wishlist.js"></script>
-
-<script>
-function addToCart(productId) {
-    // AJAX request to add the product to the cart
-    fetch('add_to_cart.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ product_id: productId })
-    }).then(response => response.json())
-      .then(data => {
-          if (data.success) {
-              alert('Product added to cart successfully.');
-          } else {
-              alert('Failed to add product to cart.');
-          }
-      });
-}
-</script>
+<script src="basket.js"></script>
 </body>
 </html>

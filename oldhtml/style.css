@@ -4,18 +4,14 @@
     padding: 0;
 }
 header{
-    display: flexbox;
-    min-height: 10vh;
+    min-height: 100vh;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   
 
 }
  nav{
     background-color: #EEE4E1;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    position: fixed;
-    z-index: 1000;
-    text-align: center;
+
 }
  nav ul{
     width: 100%;
@@ -35,9 +31,9 @@ header{
     align-items: center;
     color: black;
 }
-/* nav a:after{
+nav a:after{
     content: "";
-    position: relative;
+    position: absolute;
     background-color: black;
     height: 3px;
     width: 0%;
@@ -45,14 +41,14 @@ header{
     bottom: 60px;
     transition: 0.3s;
 
-} */
+}
 nav a:hover{
     color: brown;
 }
- /* nav a:hover:after{
+ nav a:hover:after{
     width: 50%;
 
-} */
+}
 nav ul li:first-child a:hover:after {
     width: 0;
 }
@@ -133,13 +129,11 @@ nav ul li img {
     margin-right: 10px; 
 }
 .search-form {
-    position: relative;
-    top: 0vh; 
-    z-index: 100;
-
-    /* left: 50%; */
-    /* transform: translateX(-50%);
-    border-bottom: 1px solid #000; */
+    position: absolute;
+    top: 200px; 
+    left: 50%;
+    transform: translateX(-50%);
+    /* border-bottom: 1px solid #000; */
 }
 .search {
     width: max-content;
@@ -149,7 +143,6 @@ nav ul li img {
     border-radius: 28px;
     background: #f6f6f6;
     transition: box-shadow 0.25s;
-    z-index: 99999999;
     
 }
 .search:focus-within{
@@ -172,8 +165,8 @@ nav ul li img {
 
 .search-form .line{
     align-items: right;
-    background-color: none;
-    border: 1px solid none;
+    background-color: white;
+    border: 1px solid white;
     padding: 20px;
     margin-bottom: 20px;
 }
@@ -185,7 +178,6 @@ nav ul li img {
     width: 100%;
     margin-top: 60px; /* Adjust this value as needed */
     border: 0;
-    z-index: -300;
     border-top: 1px solid #c9c7c7;
 }
 
@@ -211,7 +203,6 @@ body {
 }
 
 footer {
-    text-align: center;
     background-color: #EEE4E1;
     width: 100%;
     bottom: 0;
@@ -220,8 +211,6 @@ footer {
 }
 
 .footerContainer {
-    background-color: #EEE4E1;
-
     width: 100%;
     padding: 70px 30px 20px;
     display: flex;
@@ -233,9 +222,6 @@ footer {
     text-align: center;
     display: flex;
     flex-basis: 30%;
-    align-items: center; 
-    justify-content: center;
-
 }
 
 .footerNav ul {
@@ -287,7 +273,7 @@ footer {
     position: relative;
     overflow: hidden;
     padding: 20px;
-    margin-top: -70vh;
+    margin-top: -400px;
 
   }
   
@@ -557,7 +543,6 @@ footer {
 
 .about-1{
     margin: 30px;
-    margin-top: 0px;
     padding: 5px;
 }
 .about-1 h1{
@@ -735,51 +720,22 @@ footer {
     justify-items: center;
 }
 
-.row{
-    width: 100%;
-    height: 100%;
-}
-
-.sub-btn {
-    width: 100%;
-    padding: 0px 100px;
-    margin-right: 10px;
-    margin-top: 35%;
-}
-
-.sub-btn .submit:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.sub-btn .submit {
-    width: 50%;
-    padding: 15px;
-    border: 0;
-    outline: 0;
-    background: #a77364;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 500;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: .4s linear;
-}
-
 .item {
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s, box-shadow 0.3s;
         overflow: hidden; /* Ensure content doesn't overflow if padding is added */
-        /* width: calc(33.33% - 20px); Adjust the width based on the desired number of items per row */
-        width: 100%;
+        width: calc(33.33% - 20px); /* Adjust the width based on the desired number of items per row */
         margin: 20px; /* Adjust the margin to control spacing */
     
     
 }
 
-
+.item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
 
 .item img {
     display: block;
@@ -809,359 +765,11 @@ footer {
 
 
 
-.sub-products {
-    max-width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-}
 
-.name-shop{
-    text-align: center;
-    padding-bottom: 10px;
-    margin-top: 50px;
-}
 
 
 
-.sub-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    grid-gap: 30px;
-    justify-items: center;
-    margin-top: 50px;
-}
-
-.row-product {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    /* display: flex; Use flexbox to align items horizontally */
-}
-
-.row-product .item {
-    display: flex;
-    width: 35%;
-    height: 50%;
-    /* margin-bottom: 0; */
-    margin-left: 5px;
-}
-
-.row-product .item .inside {
-    flex: 0 0 auto; /* Maintain the image size */
-    margin-right: 15px; /* Add spacing between image and content */
-    width: 50%;
-}
-
-.row-product .item .side {
-    /* flex: 1; Allow the content to expand to fill the remaining space */
-    display: flex;
-    /* flex-direction: column; */
-    padding: 0px;
-    align-items: left;
-    flex-direction: column; /* Stack the content vertically */
-}
-
-/* Additional styling for the image and content */
-.row-product .item img {
-    display: flex;
-    max-width: 100%; /* Ensure the image does not exceed its container */
-    max-height: 100% ;
-}
-
-.for-btn{
-    display: flex;
-    flex-direction: row;
-    padding :40px;
-}
-
-
-.row-product .item .price {
-    display: flex;
-    margin-top: auto; /* Push the price to the bottom */
-    font-weight: bold;
-}
-
-
-.for-btn .btn-shop1 {
-    width: 160%;
-    margin-left: -27px;
-    
-}
-
-.for-btn .btn-shop1 .submit:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.for-btn .btn-shop1 .submit {
-    /* margin-bottom: 52%; */
-    width: 150%;
-    /* padding: 5px; */
-    border: 0;
-    outline: 0;
-    background: #a77364;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 500;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: .4s linear;
-}
-
-.for-btn .btn-shop1-right {
-    width: 140%;
-    margin-left: 30px;
-    
-}
-
-.for-btn .btn-shop1-right .submit:hover{
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-10px);
-
-}
-
-.for-btn .btn-shop1-right .submit {
-    /* margin-bottom: 52%; */
-    width: 150%;
-    /* padding: 5px; */
-    border: 0;
-    outline: 0;
-    background: #a77364;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 500;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: .4s linear;
-    transform: translateY(-5px);
-
-}
-
-
-
-
-.sub-btn {
-    width: 100%;
-    padding: 0px 100px;
-    margin-right: 10px;
-    margin-top: 35%;
-}
-
-.sub-btn .submit:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.sub-btn .submit {
-    width: 50%;
-    padding: 15px;
-    border: 0;
-    outline: 0;
-    background: #a77364;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 500;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: .4s linear;
-}
-
-.item {
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        overflow: hidden; /* Ensure content doesn't overflow if padding is added */
-        /* width: calc(33.33% - 20px); Adjust the width based on the desired number of items per row */
-        width: 100%;
-        margin: 20px; /* Adjust the margin to control spacing */
-    
-    
-}
-
-
-
-.item img {
-    display: block;
-    width: 100%;
-    height: 16vh; /* Change the height to 100% */
-    object-fit: cover;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-
-.item-content {
-    padding: 20px;
-}
-
-.item h2 {
-    font-size: 1.2rem;
-    margin-top: 0;
-    color: #333;
-}
-
-.price {
-    font-size: 1.1rem;
-    color: #666;
-    margin-top: 10px;
-}
-
-
-
-
-.sub-products2 {
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: -100px;
-}
-
-.name-shop{
-    text-align: center;
-    padding-bottom: 10px;
-}
-
-.sub-list {
-    display: flex;
-    justify-items: center;
-    flex-direction: column;
-}
-
-.row-product {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    /* display: flex; Use flexbox to align items horizontally */
-}
-
-.row-product .item {
-    display: flex;
-    width: 33%;
-    height: 50%;
-    /* margin-bottom: 0; */
-    margin-left: 5px;
-}
-
-.row-product .item .inside {
-    flex: 0 0 auto; /* Maintain the image size */
-    margin-right: 15px; /* Add spacing between image and content */
-    width: 50%;
-}
-
-.row-product .item .side {
-    /* flex: 1; Allow the content to expand to fill the remaining space */
-    display: flex;
-    /* flex-direction: column; */
-    padding: 0px;
-    align-items: left;
-    flex-direction: column; /* Stack the content vertically */
-}
-
-/* Additional styling for the image and content */
-.row-product .item img {
-    display: flex;
-    max-width: 100%; /* Ensure the image does not exceed its container */
-    max-height: 100% ;
-}
-
-.for-btn{
-    display: flex;
-    flex-direction: row;
-    padding :40px;
-}
-
-
-.row-product .item .price {
-    display: flex;
-    margin-top: auto; /* Push the price to the bottom */
-    font-weight: bold;
-}
-
-
-.for-btn .btn-shop1 {
-    width: 160%;
-    margin-left: -27px;
-    
-}
-
-.for-btn .btn-shop1 .submit:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.for-btn .btn-shop1 .submit {
-    /* margin-bottom: 52%; */
-    height: 4vh;
-    width: 150%;
-    padding: 5px;
-    border: 0;
-    outline: 0;
-    background: #a77364;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 500;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: .4s linear;
-}
-
-.for-btn .btn-shop1-right {
-    width: 140%;
-    margin-left: 30px;
-    padding: 5px;
-
-    
-}
-
-
-.for-btn .btn-shop1-right .submit:hover{
-    transform: translateY(-10px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-
-.for-btn .btn-shop1-right .submit {
-    /* margin-bottom: 52%; */
-    height: 4vh;
-    width: 150%;
-    padding: 5px;
-    border: 0;
-    outline: 0;
-    background: #a77364;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 500;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: .4s linear;
-}
-
-
-
-
-.ourshops{
-    display: block;
-    text-align: center;
-    font-size: 3rem;
-    padding: 3vh;
-}
-
-.searchsection{
-    display:block;
-    position: absolute;
-    margin-top: 0vh;
-    left: 35%;
-    top: 22vh;
-}
-
-.maincontainer{
-    display: block;
-
-    margin-top: 100vh;
-}
-
-
-
+  
 @media(max-width: 800px){
     .hideOnMobile{
         display: none;

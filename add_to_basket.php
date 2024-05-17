@@ -1,5 +1,6 @@
 <?php
 session_start();
+ob_start(); // Start output buffering
 
 header('Content-Type: application/json');
 
@@ -20,17 +21,18 @@ oci_execute($stmt);
 $user = oci_fetch_assoc($stmt);
 $userid = $user['USERID'];
 
-// Get the product ID and quantity from the request
+// Get the product ID from the request
 $data = json_decode(file_get_contents("php://input"), true);
 $productid = $data['product_id'];
-$quantity = $data['quantity'];
 
-// Call the function to update the basket quantity
-$result = updateBasketQuantity($userid, $productid, $quantity);
+$result = addToBasket($userid, $productid);
 
 if ($result) {
+    // Clean (erase) the output buffer and send JSON response
+    ob_end_clean();
     echo json_encode(['success' => true]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Failed to update quantity']);
+    // Clean (erase) the output buffer and send JSON response
+    ob_end_clean();
+    echo json_encode(['success' => false, 'message' => 'Failed to add product to basket']);
 }
-?>

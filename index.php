@@ -4,11 +4,11 @@
 <head>
     <title>Collective Shop Sphere</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+
     <style>
         html {
             width: 100%;
@@ -77,8 +77,8 @@ include 'header.php';
                     <div class="product-image">
                         <a  href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>">
                         <img src="<?php echo $product['IMAGE']; ?>" class="product-thumb" alt=""></a>
-                        <button class="card-btn cart-btn">Add to cart</button>
-                        <button class="card-btn wishlist-button" onclick="addToWishlist(<?php echo $product['PRODUCTID']; ?>)"  >Add to Wishlist</button>
+                        <button class="card-btn cart-btn" onclick="addToBasket(<?php echo $product['PRODUCTID']; ?>)">Add to Basket</button>
+                        <button class="card-btn wishlist-button" onclick="addToWishlist(<?php echo $product['PRODUCTID']; ?>)">Add to Wishlist</button>
 
                     </div>
                     <div class="product-info" >
@@ -154,6 +154,8 @@ include 'footer.php';
 
     <script src="script.js"></script>
     <script src="wishlist.js"></script>
+    <script src="basket.js"></script>
+
 
 </body>
 

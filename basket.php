@@ -233,8 +233,11 @@ oci_close($conn);
          
     </div>
     <div class="actions bottom-buttons">
-        <button style="background-color: #a77364; border: none; padding: 16px 40px; color: white; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; border-radius: 0; width: 11rem;"  class="checkout-btn">Checkout</button>
-        <button style="background-color: #dddddd ; border: none; padding: 16px 40px; color: #a77364; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; border-radius: 0; width: 11rem;"  class="cancel-btn">Cancel</button>
+        <button 
+        style="background-color: #a77364; border: none; padding: 16px 40px; color: white; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; border-radius: 0; width: 11rem;"  
+        class="checkout-btn" onclick="window.location.href = 'confirmation.php'">Checkout</button>
+        <button style="background-color: #dddddd ; border: none; padding: 16px 40px; color: #a77364; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; border-radius: 0; width: 11rem;" 
+         class="cancel-btn"  onclick="window.history.back()" >Cancel</button>
     </div>
 </div>
 </div>

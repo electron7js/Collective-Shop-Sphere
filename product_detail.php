@@ -69,10 +69,24 @@ oci_close($conn);
             position: relative;
             top:-5rem;
         }
+        .basket-btn{
+            width: 100%;
+    padding: 10px 20px;
+    border: 0;
+    outline: 0;
+    background: #B2967D;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .4s linear;
+        }
     </style>
 </head>
 <body>
 <script src="wishlist.js"></script>
+<script src="basket.js"></script>
 
 <?php include 'header.php'; ?>
 
@@ -112,7 +126,7 @@ oci_close($conn);
 
             <div class="quantity">
                 <div class="sub-btn" >
-                    <button class="submit" style="position:relative; left:-1rem;">Add to Cart</button>
+                    <button class="basket-btn" onclick="addToBasket(<?php echo $product['PRODUCTID']; ?>)"  style="position:relative; left:-1rem;">Add to Basket</button>
                     <button class="wishlist" onclick="addToWishlist(<?php echo $product['PRODUCTID']; ?>)" style="position:relative; left:1rem;">Add to Wishlist</button>
                 </div>
             </div>
