@@ -95,8 +95,12 @@ oci_close($conn);
         },
         onApprove: function(data, actions) {
             return actions.order.capture().then(function(details) {
-                // Redirect to a success page
-                window.location.href = 'payment_success.php?purchaseid=<?= $purchaseid ?>';
+                // Extract payment details from the response
+                const externaltransactionid = details.id;
+                const paymentamount = details.purchase_units[0].amount.value;
+
+                // Redirect to a success page with payment details
+                window.location.href = 'payment_success.php?purchaseid=<?= $purchaseid ?>&externaltransactionid=' + externaltransactionid + '&paymentamount=' + paymentamount;
             });
         }
     }).render('#paypal-button-container');

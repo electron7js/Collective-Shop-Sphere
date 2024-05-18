@@ -193,7 +193,7 @@ function clearBasket($userid) {
     oci_execute($stmt);
 }
 
-function createPurchase($userid, $basketItems) {
+function createPurchase($userid, $basketItems,$collection_slot_id) {
     include 'config.php';
 
     // Insert a new purchase record
@@ -201,6 +201,13 @@ function createPurchase($userid, $basketItems) {
     $stmt = oci_parse($conn, $query);
     oci_bind_by_name($stmt, ':userid', $userid);
     oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
+    oci_execute($stmt);
+
+    $query = "INSERT INTO Purchase_collection_slot (pcsid, purchaseid, collection_slot_id) VALUES (seq_pcsid.NEXTVAL, :purchaseid, :collection_slot_id) RETURNING pcsid INTO :pcsid";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':pcsid', $pcsid);
+    oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
+    oci_bind_by_name($stmt, ':collection_slot_id', $collection_slot_id);
     oci_execute($stmt);
 
     // Move items from basket to purchase_detail
@@ -221,4 +228,40 @@ function createPurchase($userid, $basketItems) {
     oci_close($conn);
 
     return $purchaseid;
+}
+
+function getCollectionSlots($conn) {
+    $query_slots = "SELECT collection_slot_id, TO_CHAR(collection_date, 'YYYY-MM-DD') AS collection_date, TO_CHAR(collection_start, 'HH24:MI') AS collection_start, TO_CHAR(collection_end, 'HH24:MI') AS collection_end
+                    FROM Collection_Slot
+                    WHERE collection_date >= SYSDATE
+                    ORDER BY collection_date, collection_start";
+    $stmt_slots = oci_parse($conn, $query_slots);
+    oci_execute($stmt_slots);
+
+    $slots = [];
+    while ($row_slot = oci_fetch_assoc($stmt_slots)) {
+        $slots[] = $row_slot;
+    }
+
+    return $slots;
+}
+
+function getPickupDetails($purchaseid) {
+    include 'config.php';
+
+    // Query to find the pickup details
+    $query = "SELECT cs.collection_date, cs.collection_start, cs.collection_end
+              FROM purchase_collection_slot pcs
+              JOIN Collection_Slot cs ON pcs.collection_slot_id = cs.collection_slot_id
+              WHERE pcs.purchaseid = :purchaseid";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
+    oci_execute($stmt);
+
+    $pickupDetails = oci_fetch_assoc($stmt);
+
+    // Close the database connection
+    oci_close($conn);
+
+    return $pickupDetails;
 }

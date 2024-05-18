@@ -7,6 +7,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 include 'config.php';
+include 'functions.php';
 
 $purchaseid = $_GET['purchaseid'];
 
@@ -14,6 +15,19 @@ if (!$purchaseid) {
     header('Location: index.php');
     exit();
 }
+
+$purchaseid = $_GET['purchaseid'];
+
+$pickupDetails = getPickupDetails($purchaseid);
+
+$collectionDate = $pickupDetails['COLLECTION_DATE'];
+$collectionStart = $pickupDetails['COLLECTION_START'];
+$collectionEnd = $pickupDetails['COLLECTION_END'];
+
+// Convert date and time using DateTime::createFromFormat
+$collectionDateTime = DateTime::createFromFormat('d-M-y', $collectionDate);
+$collectionStartTime = DateTime::createFromFormat('d-M-y h.i.s.u A', $collectionStart);
+$collectionEndTime = DateTime::createFromFormat('d-M-y h.i.s.u A', $collectionEnd);
 
 // Fetch purchase details
 $query = "SELECT p.purchaseid, p.purchase_date, u.username, c.firstname, c.lastname, c.address
@@ -107,7 +121,7 @@ oci_close($conn);
     <div style="  padding:10px ;border: 1px solid black;">
     <p>Invoice number: <?= $purchase['PURCHASEID'] ?></p>
     <p style="float:right; position:relative; top:-4vh;">Date of issue: <?= date('Y-m-d', strtotime($purchase['PURCHASE_DATE'])) ?></p>
-    <p>Pickup date and time: ____________________</p>
+    <p>Pickup Date and Time: <?= $collectionDateTime->format('l, F j, Y') ?> <?= $collectionStartTime->format('h:i A') ?> - <?= $collectionEndTime->format('h:i A') ?></p>
     <h2>Bill No: <?= $purchase['PURCHASEID'] ?></h2>
     <p>Client name: <?= $purchase['FIRSTNAME'] . ' ' . $purchase['LASTNAME'] ?></p> 
     <hr>

@@ -34,7 +34,9 @@ $basketItems = getBasketItems($userid);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Create the purchase and get the purchase ID
-    $purchaseid = createPurchase($userid, $basketItems);
+    $collection_slot_id = $_POST['collection_slot_id'];
+
+    $purchaseid = createPurchase($userid, $basketItems,$collection_slot_id);
 
     // Redirect to the payment page
     header("Location: payment.php?purchaseid=" . $purchaseid);
@@ -49,6 +51,10 @@ while ($product = oci_fetch_assoc($stmt)) {
     $products[] = $product;
     $total += $product['PRICE'] * $product['QUANTITY'];
 }
+
+$slots = getCollectionSlots($conn);
+
+
 
 ?>
 
@@ -149,6 +155,27 @@ while ($product = oci_fetch_assoc($stmt)) {
 }        
 
     </style>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slots = <?= json_encode($slots) ?>;
+            const dateSelect = document.getElementById('collection_date');
+            const timeSelect = document.getElementById('collection_time');
+
+            dateSelect.addEventListener('change', function() {
+                const selectedDate = this.value;
+                timeSelect.innerHTML = '<option value="">Select a time</option>';
+
+                const filteredSlots = slots.filter(slot => slot.COLLECTION_DATE === selectedDate);
+                filteredSlots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot.COLLECTION_SLOT_ID;
+                    option.text = `${slot.COLLECTION_START} - ${slot.COLLECTION_END}`;
+                    console.log(slot.COLLECTION_START)
+                    timeSelect.appendChild(option);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <?php include 'header.php'; ?>
@@ -183,11 +210,25 @@ while ($product = oci_fetch_assoc($stmt)) {
         <div class="selectors">
         <div class="form-group">
             <label for="date">Date</label>
-            <input type="date" id="date" name="date" required>
+            <select name="collection_date" id="collection_date" required>
+                <option value="">Select a date</option>
+                <?php
+                $uniqueDates = array_unique(array_map(function($slot) {
+                    return $slot['COLLECTION_DATE'];
+                }, $slots));
+
+                foreach ($uniqueDates as $date) {
+                    echo '<option value="' . $date . '">' . date('l, F j, Y', strtotime($date)) . '</option>';
+                }
+                ?>
+            </select>
         </div>
         <div class="form-group">
             <label for="time">Time</label>
-            <input type="time" id="time" name="time" required>
+            <select name="collection_slot_id" id="collection_time" required>
+                <option value="">Select a time</option>
+            </select>
+
         </div>
         </div>
         <div class="btn-group">
@@ -197,6 +238,7 @@ while ($product = oci_fetch_assoc($stmt)) {
     </form>
 </div>
 
+    
 <?php include 'footer.php'; ?>
 </body>
 </html>
