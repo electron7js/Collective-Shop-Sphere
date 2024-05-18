@@ -7,6 +7,8 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+
     <style>
         html {
             width: 100%;
@@ -28,6 +30,9 @@
     margin-top: 30vh;
 }
 
+.search-results {
+    width: 50%;
+}
     </style>
 </head>
 
@@ -67,11 +72,14 @@ include 'header.php';
             <form class="search-form">
         <div class="search">
             <span class="search-icon material-symbols-outlined">Search</span>
-            <input class="search-input" type="search" placeholder="Search">
+            <input class="search-input" type="text" name="query" id="search" placeholder="Search" onkeyup="liveSearch()">
         </div>
+        <div id="search-results" class="search-results"></div>
+
     </form>
 
     </section>
+
 
     <section class="featured-categories-section" style="position:relative; top:8vh;">
         <h2 class="featured-categories-title">Featured Categories</h2>
@@ -157,6 +165,8 @@ include 'footer.php';
 ?>
 
     <script src="script.js"></script>
+    <script src="search.js"></script>
+
 </body>
 
 </html>

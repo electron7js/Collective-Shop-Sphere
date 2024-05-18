@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+
 
     <style>
         html {
@@ -55,11 +57,13 @@ include 'header.php';
 ?>
 <div class="maincontainer">
     <section class="searchsection">
-            <form class="search-form">
+            <form action="search_results.php" method="get" class="search-form">
         <div class="search">
             <span class="search-icon material-symbols-outlined"> search</span>
-            <input class="search-input" type="search" placeholder="Search">
+            <input class="search-input" type="text" name="query" id="search" placeholder="Search" onkeyup="liveSearch()">
         </div>
+        <div id="search-results" class="search-results"></div>
+
         <div style="width:500%; position:relative;top:5vh;left:-150%">
             <hr>
         </div>
@@ -155,6 +159,7 @@ include 'footer.php';
     <script src="script.js"></script>
     <script src="wishlist.js"></script>
     <script src="basket.js"></script>
+    <script src="search.js"></script>
 
 
 </body>

@@ -1,0 +1,23 @@
+.search-results {
+    position: absolute;
+    left: 2rem;
+    background-color: white;
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    width: calc(100% - 40px); /* Adjust based on padding and border */
+    display: none;
+    z-index: 1000;
+}
+
+.search-results a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    border-bottom: 1px solid #ddd;
+}
+
+.search-results a:hover {
+    background-color: #f0f0f0;
+}

@@ -3,6 +3,7 @@ session_start();
 
 // Include the config.php file for database connection
 include 'config.php';
+include 'functions.php';
 
 if (!isset($_SESSION['username'])) {
     header('Location: login.php');
@@ -28,6 +29,19 @@ $stmt = oci_parse($conn, $query);
 oci_bind_by_name($stmt, ':userid', $userid);
 oci_execute($stmt);
 
+
+$basketItems = getBasketItems($userid);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Create the purchase and get the purchase ID
+    $purchaseid = createPurchase($userid, $basketItems);
+
+    // Redirect to the payment page
+    header("Location: payment.php?purchaseid=" . $purchaseid);
+    exit();
+}
+
+
 // Calculate the total price
 $total = 0;
 $products = [];
@@ -36,39 +50,6 @@ while ($product = oci_fetch_assoc($stmt)) {
     $total += $product['PRICE'] * $product['QUANTITY'];
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get the selected date and time
-    $date = $_POST['date'];
-    $time = $_POST['time'];
-
-    // Insert purchase details into the database
-    $purchase_date = $date . ' ' . $time;
-    $query = "INSERT INTO Purchase (purchaseid, purchase_date, confirmed, userid) VALUES (seq_purchaseid.NEXTVAL, TO_TIMESTAMP(:purchase_date, 'YYYY-MM-DD HH24:MI:SS'), 1, :userid) RETURNING purchaseid INTO :purchaseid";
-    $stmt = oci_parse($conn, $query);
-    oci_bind_by_name($stmt, ':purchase_date', $purchase_date);
-    oci_bind_by_name($stmt, ':userid', $userid);
-    oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
-    oci_execute($stmt);
-
-    // Insert purchase details for each product
-    foreach ($products as $product) {
-        $query = "INSERT INTO Purchase_Detail (purchasedetailid, productid, purchaseid) VALUES (seq_purchasedetailid.NEXTVAL, :productid, :purchaseid)";
-        $stmt = oci_parse($conn, $query);
-        oci_bind_by_name($stmt, ':productid', $product['PRODUCTID']);
-        oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
-        oci_execute($stmt);
-    }
-
-    // Clear the user's basket
-    $query = "DELETE FROM Product_Basket WHERE basketid = (SELECT basketid FROM Basket WHERE userid = :userid)";
-    $stmt = oci_parse($conn, $query);
-    oci_bind_by_name($stmt, ':userid', $userid);
-    oci_execute($stmt);
-
-    // Redirect to a success page
-    header('Location: success.php');
-    exit();
-}
 ?>
 
 <!DOCTYPE html>

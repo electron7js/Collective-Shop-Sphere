@@ -166,3 +166,59 @@ function updateBasketQuantity($userid, $productid, $quantity) {
 
     return $result ? true : false;
 }
+
+function getBasketItems($userid) {
+    global $conn;
+    $query = "SELECT pb.productid, pb.quantity, p.price
+              FROM Product_Basket pb
+              JOIN Basket b ON pb.basketid = b.basketid
+              JOIN Product p ON pb.productid = p.productid
+              WHERE b.userid = :userid";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':userid', $userid);
+    oci_execute($stmt);
+
+    $items = [];
+    while ($row = oci_fetch_assoc($stmt)) {
+        $items[] = $row;
+    }
+    return $items;
+}
+
+function clearBasket($userid) {
+    global $conn;
+    $query = "DELETE FROM Product_Basket WHERE basketid = (SELECT basketid FROM Basket WHERE userid = :userid)";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':userid', $userid);
+    oci_execute($stmt);
+}
+
+function createPurchase($userid, $basketItems) {
+    include 'config.php';
+
+    // Insert a new purchase record
+    $query = "INSERT INTO Purchase (purchaseid, purchase_date, confirmed, userid) VALUES (seq_purchaseid.NEXTVAL, SYSDATE, 0, :userid) RETURNING purchaseid INTO :purchaseid";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':userid', $userid);
+    oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
+    oci_execute($stmt);
+
+    // Move items from basket to purchase_detail
+    foreach ($basketItems as $item) {
+        $query = "INSERT INTO Purchase_detail (purchasedetailid, productid, purchaseid, price, quantity) VALUES (seq_purchasedetailid.NEXTVAL, :productid, :purchaseid, :price, :quantity)";
+        $stmt = oci_parse($conn, $query);
+        oci_bind_by_name($stmt, ':productid', $item['PRODUCTID']);
+        oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
+        oci_bind_by_name($stmt, ':price', $item['PRICE']);
+        oci_bind_by_name($stmt, ':quantity', $item['QUANTITY']);
+        oci_execute($stmt);
+    }
+
+    // Clear the basket
+    clearBasket($userid);
+
+    // Close the database connection
+    oci_close($conn);
+
+    return $purchaseid;
+}

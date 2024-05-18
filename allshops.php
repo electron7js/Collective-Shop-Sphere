@@ -7,6 +7,8 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+
     <style>
         html {
             width: 100%;
@@ -23,10 +25,12 @@
             font: 5em sans-serif;
         }
         .maincontainer{
-    display: block;
-
-    margin-top: 30vh;
-}
+            display: block;
+            margin-top: 30vh;
+        }
+        .search-results {
+            width: 50%;
+        }
 
     </style>
 </head>
@@ -60,18 +64,20 @@ include 'header.php';
 
 <div style="background: #EEE4E1; width:600%; height:45vh; position:absolute; top:-0vh"></div>
 
-    <section class="searchsection" style="top:14vh;" >
+<section class="searchsection" style="top:14vh;" >
 
-        <h1 class="support">Support your local shops</h1>
-        <hr style="width:90%; position:relative; left:-15%;top:-3vh;">
-            <form class="search-form">
-        <div class="search">
-            <span class="search-icon material-symbols-outlined">Search</span>
-            <input class="search-input" type="search" placeholder="Search">
-        </div>
-    </form>
+<h1 class="support">Support your local shops</h1>
+<hr style="width:90%; position:relative; left:-15%;top:-3vh;">
+    <form class="search-form">
+<div class="search">
+    <span class="search-icon material-symbols-outlined">Search</span>
+    <input class="search-input" type="text" name="query" id="search" placeholder="Search" onkeyup="liveSearch()">
+</div>
+<div id="search-results" class="search-results"></div>
 
-    </section>
+</form>
+
+</section>
 
 
 
@@ -143,6 +149,8 @@ include 'footer.php';
 
     <script src="script.js"></script>
     <script src="wishlist.js"></script>
+    <script src="search.js"></script>
+
 
 </body>
 
