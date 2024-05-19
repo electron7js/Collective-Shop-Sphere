@@ -82,6 +82,7 @@ oci_close($conn);
         .container {
             max-width: 800px;
             margin: 50px auto;
+            margin-top: 6rem;
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 10px;

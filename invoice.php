@@ -71,11 +71,12 @@ oci_close($conn);
     <style>
 
         .outer-container{
-            min-height:70vh;
+            min-height:60vh;
         }
         .container {
             max-width: 800px;
             margin: 50px auto;
+            margin-top : 6rem;
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 10px;
