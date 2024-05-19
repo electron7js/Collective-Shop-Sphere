@@ -265,3 +265,54 @@ function getPickupDetails($purchaseid) {
 
     return $pickupDetails;
 }
+
+function checkUserRole($username, $conn) {
+    include 'config.php';
+
+    $userRole = '';
+
+    // Get the user ID
+    $query = "SELECT userid FROM Users WHERE username = :username";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':username', $username);
+    oci_execute($stmt);
+    $user = oci_fetch_assoc($stmt);
+    $userid = $user['USERID'];
+
+    if ($userid) {
+        // Check if the user is a customer
+        $query = "SELECT COUNT(*) AS count FROM Customer WHERE userid = :userid";
+        $stmt = oci_parse($conn, $query);
+        oci_bind_by_name($stmt, ':userid', $userid);
+        oci_execute($stmt);
+        $row = oci_fetch_assoc($stmt);
+        if ($row['COUNT'] > 0) {
+            $userRole = 'Customer';
+        }
+
+        // Check if the user is a trader
+        $query = "SELECT COUNT(*) AS count FROM Trader WHERE userid = :userid";
+        $stmt = oci_parse($conn, $query);
+        oci_bind_by_name($stmt, ':userid', $userid);
+        oci_execute($stmt);
+        $row = oci_fetch_assoc($stmt);
+        if ($row['COUNT'] > 0) {
+            $userRole = 'Trader';
+        }
+
+        // Check if the user is an admin
+        $query = "SELECT COUNT(*) AS count FROM Admin WHERE userid = :userid";
+        $stmt = oci_parse($conn, $query);
+        oci_bind_by_name($stmt, ':userid', $userid);
+        oci_execute($stmt);
+        $row = oci_fetch_assoc($stmt);
+        if ($row['COUNT'] > 0) {
+            $userRole = 'Admin';
+        }
+    }
+
+    // Store the user role in the session
+    $_SESSION['user_role'] = $userRole;
+
+    return $userRole;
+}
