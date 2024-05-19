@@ -93,6 +93,7 @@ oci_close($conn);
         .order-details {
             display: flex;
             flex-direction: column;
+            padding:2rem;
         }
         .order-date {
             font-size: 0.9rem;

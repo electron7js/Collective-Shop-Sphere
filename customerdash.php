@@ -8,22 +8,19 @@ if (!isset($_SESSION['username'])) {
 
 include 'config.php';
 
-
-
 $userRole = $_SESSION['user_role'];
 
 if ($userRole != 'Customer') {
     header('Location: dashboard.php');
     exit();
-} 
-
+}
 
 // Get the logged-in user's ID
 $username = $_SESSION['username'];
 
 // Fetch customer details using JOIN query
 $query = "
-    SELECT u.username, u.contactnumber, u.email, c.firstname, c.lastname, c.address
+    SELECT u.userid, u.username, u.contactnumber, u.email, c.firstname, c.lastname, c.address, c.profile_image
     FROM Users u
     JOIN Customer c ON u.userid = c.userid
     WHERE u.username = :username
@@ -38,17 +35,6 @@ if (!$customer) {
     exit();
 }
 
-$query = "
-    SELECT u.userid 
-    FROM Users u
-    WHERE u.username = :username
-";
-$stmt = oci_parse($conn, $query);
-oci_bind_by_name($stmt, ':username', $username);
-oci_execute($stmt);
-$user = oci_fetch_assoc($stmt);
-$userid = $user['USERID'];
-
 // Fetch orders for the customer
 $query = "
     SELECT p.purchaseid, p.purchase_date, p.confirmed
@@ -57,7 +43,7 @@ $query = "
     ORDER BY p.purchase_date DESC
 ";
 $stmt = oci_parse($conn, $query);
-oci_bind_by_name($stmt, ':userid', $userid);
+oci_bind_by_name($stmt, ':userid', $customer['USERID']);
 oci_execute($stmt);
 
 $orders = [];
@@ -66,7 +52,6 @@ while ($order = oci_fetch_assoc($stmt)) {
         $orders[] = $order;
     }
 }
-
 
 oci_close($conn);
 ?>
@@ -114,7 +99,6 @@ oci_close($conn);
             background-color: #007bff;
             color: white;
         }
-
 
         .order-container {
             max-width: 800px;
@@ -170,7 +154,7 @@ oci_close($conn);
         .order-container .view-invoice-btn:hover {
             background-color: #0056b3;
         }
-        .order-container img{
+        .order-container img {
             width: 3rem;
         }
     </style>
@@ -181,6 +165,14 @@ oci_close($conn);
 
 <div class="container">
     <h2>Customer's Dashboard</h2>
+
+    <div class="profile-picture">
+        <label for="profile_picture">Profile Picture</label>
+        <?php if ($customer['PROFILE_IMAGE']): ?>
+            <img src="<?php echo $customer['PROFILE_IMAGE']; ?>" alt="Profile Picture" style="max-width: 150px; display: block; margin-bottom: 10px;">
+        <?php endif; ?>
+    </div>
+
     <div class="details">
         <div>First Name: <?= $customer['FIRSTNAME'] ?></div>
         <div>Last Name: <?= $customer['LASTNAME'] ?></div>
@@ -190,32 +182,31 @@ oci_close($conn);
     </div>
 
     <div class="button-group">
-    <button class="edit-profile-btn" onclick="window.location.href='customerorders.php'">Order History</button>
-        <button class="edit-profile-btn" onclick="window.location.href='edit_profile.php'">Edit Profile</button>
+        <button class="edit-profile-btn" onclick="window.location.href='customerorders.php'">Order History</button>
+        <button class="edit-profile-btn" onclick="window.location.href='customer_edit_profile.php'">Edit Profile</button>
         <button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
     </div>
 
-
     <div class="order-container">
-    <h2>Confirmed Orders</h2>
-    <ul class="order-list">
-        <?php foreach ($orders as $order): ?>
-            <li>
-                <a href="invoice.php?purchaseid=<?= $order['PURCHASEID'] ?>">
-                    <img style="object-fit:contain" src="images/order_placeholder.png" alt="Order Image" style="width: 50px; height: 50px; margin-right: 20px;">
-                    <div class="order-details">
-                        <span>Order ID: <?= $order['PURCHASEID'] ?></span>
-                        <span class="order-date">Date: <?= date('l, F j, Y', strtotime($order['PURCHASE_DATE'])) ?></span>
-                        <span class="order-status <?= $order['CONFIRMED'] ? 'confirmed' : '' ?>">
-                            <?= $order['CONFIRMED'] ? 'Payment Confirmed' : 'Payment Not Confirmed' ?>
-                        </span>
-                    </div>
-                </a>
-                <button class="view-invoice-btn" onclick="window.location.href='invoice.php?purchaseid=<?= $order['PURCHASEID'] ?>'">View Invoice</button>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-</div>
+        <h2>Confirmed Orders</h2>
+        <ul class="order-list">
+            <?php foreach ($orders as $order): ?>
+                <li>
+                    <a href="invoice.php?purchaseid=<?= $order['PURCHASEID'] ?>">
+                        <img style="object-fit:contain" src="images/order_placeholder.png" alt="Order Image" style="width: 50px; height: 50px; margin-right: 20px;">
+                        <div class="order-details">
+                            <span>Order ID: <?= $order['PURCHASEID'] ?></span>
+                            <span class="order-date">Date: <?= date('l, F j, Y', strtotime($order['PURCHASE_DATE'])) ?></span>
+                            <span class="order-status <?= $order['CONFIRMED'] ? 'confirmed' : '' ?>">
+                                <?= $order['CONFIRMED'] ? 'Payment Confirmed' : 'Payment Not Confirmed' ?>
+                            </span>
+                        </div>
+                    </a>
+                    <button class="view-invoice-btn" onclick="window.location.href='invoice.php?purchaseid=<?= $order['PURCHASEID'] ?>'">View Invoice</button>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 </div>
 
 <?php include 'footer.php'; ?>
