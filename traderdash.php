@@ -157,10 +157,10 @@ oci_close($conn);
     </div>
 
     <div class="button-group">
-        <button class="action-btn" onclick="window.location.href='offers.php'">Offers</button>
+        <button class="action-btn" onclick="window.location.href='trader_create_offer.php'">Offers</button>
         <button class="action-btn" onclick="window.location.href='trader_edit_shop.php'">Edit Shop</button>
         <button class="action-btn" onclick="window.location.href='trader_add_product.php'">Add Product</button>
-        <button class="action-btn" onclick="window.location.href='edit_product.php'">Edit Product</button>
+        <button class="action-btn" onclick="window.location.href='trader_edit_product.php'">Edit Product</button>
         <button class="action-btn" onclick="window.location.href='trader_edit_account.php'">Edit Account</button>
         <button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
     </div>
