@@ -3,6 +3,7 @@ session_start();
 
 // Include the config.php file for database connection
 include 'config.php';
+include 'email_function.php';
 
 // Variable to hold error messages
 $error = '';
@@ -12,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form data
     $trader_name = $_POST['trader_name'];
     $address = $_POST['address'];
+    $username = $_POST['username'];
     $email = $_POST['email'];
     $contact = $_POST['contact'];
     $dob = $_POST['dob'];
@@ -28,20 +30,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
         // Check if the email already exists
-        $query = "SELECT * FROM Users WHERE email = :email";
+        $query = "SELECT * FROM Users WHERE email = :email OR username = :username";
         $stmt = oci_parse($conn, $query);
+        oci_bind_by_name($stmt, ':username', $username);
         oci_bind_by_name($stmt, ':email', $email);
         oci_execute($stmt);
         if (oci_fetch_assoc($stmt)) {
-            $error = 'Email already exists.';
+            $error = 'Email or username already exists.';
         } else {
             // Hash the password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             // Insert into Users table and get the user ID
             $user_id = 0;
-            $query = "INSERT INTO Users (userid, username, password, email) VALUES (seq_userid.NEXTVAL, :email, :password, :email) RETURNING userid INTO :user_id";
+            $query = "INSERT INTO Users (userid, username, password, email) VALUES (seq_userid.NEXTVAL, :username, :password, :email) RETURNING userid INTO :user_id";
             $stmt = oci_parse($conn, $query);
+            oci_bind_by_name($stmt, ':username', $username);
             oci_bind_by_name($stmt, ':email', $email);
             oci_bind_by_name($stmt, ':password', $password);
             oci_bind_by_name($stmt, ':user_id', $user_id);
@@ -64,7 +68,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             oci_bind_by_name($stmt, ':userid', $user_id);
             oci_execute($stmt);
 
-            $success = 'Registration successful!';
+            sendVerificationEmail($user_id);
+
+
+            $success = 'Registration successful! Verification code sent to email';
         }
 
         // Close the database connection
@@ -188,6 +195,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="form-group">
                     <input type="text" id="contact" name="contact" placeholder="Contact" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" placeholder="Username" required>
                 </div>
             </div>
             <div class="form-row">

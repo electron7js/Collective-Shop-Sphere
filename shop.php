@@ -149,7 +149,8 @@ include 'header.php';
                         $count++;
                     endwhile;
                     ?>
-<a href="allshops.php" style="position:relative; top:7vh; background-color: #a77364; border: none; padding: 10px 20px; color: white; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; border-radius: 0; width: 150px;">All Shops</a>
+                
+                <a href="allshops.php" style="position:relative; top:7vh; background-color: #a77364; border: none; padding: 10px 20px; color: white; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; border-radius: 0; width: 150px;">All Shops</a>
 
                 </div>
             </div>

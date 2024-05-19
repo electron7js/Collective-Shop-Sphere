@@ -3,6 +3,8 @@ session_start();
 
 // Include the config.php file for database connection
 include 'config.php';
+include 'email_function.php';
+
 
 // Variable to hold error messages
 $error = '';
@@ -14,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $last_name = $_POST['last_name'];
     $phone = $_POST['phone'];
     $email = $_POST['email'];
+    $username = $_POST['username'];
     $gender = $_POST['gender'];
     $dob = $_POST['dob'];
     $password = $_POST['password'];
@@ -23,13 +26,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($password !== $confirm_password) {
         $error = 'Passwords do not match.';
     } else {
-        // Check if the email already exists
-        $query = "SELECT * FROM Users WHERE email = :email";
+        // Check if the email or username already exists
+        $query = "SELECT * FROM Users WHERE email = :email OR username = :username";
         $stmt = oci_parse($conn, $query);
         oci_bind_by_name($stmt, ':email', $email);
+        oci_bind_by_name($stmt, ':username', $username);
         oci_execute($stmt);
         if (oci_fetch_assoc($stmt)) {
-            $error = 'Email already exists.';
+            $error = 'Email or username already exists.';
         } else {
             // Hash the password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -37,8 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             //unhashed password in use for now
 
             $user_id = 0;
-            $query = "INSERT INTO Users (userid, username, password, email) VALUES (seq_userid.NEXTVAL, :email, :password, :email) RETURNING userid INTO :user_id";
+            $query = "INSERT INTO Users (userid, username, password, email) VALUES (seq_userid.NEXTVAL, :username, :password, :email) RETURNING userid INTO :user_id";
             $stmt = oci_parse($conn, $query);
+            oci_bind_by_name($stmt, ':username', $username);
             oci_bind_by_name($stmt, ':email', $email);
             oci_bind_by_name($stmt, ':password', $password);
             oci_bind_by_name($stmt, ':user_id', $user_id);
@@ -54,7 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             oci_bind_by_name($stmt, ':dob', $dob);
             oci_execute($stmt);
 
-            $success = 'Registration successful!';
+            sendVerificationEmail($user_id);
+
+            $success = 'Registration successful! Verification code sent to email';
         }
 
         // Close the database connection
@@ -181,6 +188,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="form-group">
                     <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" placeholder="Username" required>
                 </div>
             </div>
             <div class="form-row">

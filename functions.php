@@ -394,3 +394,35 @@ function saveUserProfileImage($imageInput) {
     return 'images/userimages/'.$fileName;
 }
 
+
+function saveTraderImage($imageInput) {
+    $targetDir = "images/traderimages/";
+    $imageFileType = strtolower(pathinfo($imageInput['name'], PATHINFO_EXTENSION));
+    $fileName = uniqid() . '.' . $imageFileType;
+    $targetFilePath = $targetDir . $fileName;
+    $check = getimagesize($imageInput['tmp_name']);
+    if ($check === false) {
+        throw new Exception("File is not an image.");
+    }
+    if ($imageInput['size'] > 5000000) {
+        throw new Exception("Sorry, your file is too large.");
+    }
+    $allowedFormats = ['jpg', 'jpeg', 'png', 'gif'];
+    if (!in_array($imageFileType, $allowedFormats)) {
+        throw new Exception("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+    }
+
+    // Check if the directory exists, if not, create it
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0777, true);
+    }
+
+    // Move the uploaded file to the target directory
+    if (!move_uploaded_file($imageInput['tmp_name'], $targetFilePath)) {
+        throw new Exception("Sorry, there was an error uploading your file.");
+    }
+
+    // Return the file name
+    return 'images/traderimages/'.$fileName;
+}
+
