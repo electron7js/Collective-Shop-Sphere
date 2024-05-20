@@ -223,11 +223,9 @@ oci_close($conn);
                 </div>
                 <p><b>Product information</b><br>
                 <?php echo nl2br(htmlspecialchars($product['DESCRIPTION'])); ?>
-                <br><br><b>Ingredient</b><br>
-                <!-- Example ingredient -->
-                Sugar, Flour, Eggs
+                <br><br><b>Remaining stock</b><br>
+                <?php echo nl2br(htmlspecialchars($product['REMAININGSTOCK'])); ?>
                 <br><b>Allergy Information</b><br>
-                <!-- Example allergy information -->
                 Contains nuts and dairy
                 </p>
             </div>

@@ -20,7 +20,7 @@ $user = oci_fetch_assoc($stmt);
 $userid = $user['USERID'];
 
 // Fetch products in the user's basket
-$query = "SELECT pb.productid, p.name, p.price, pb.quantity 
+$query = "SELECT pb.productid, p.name, p.price, pb.quantity, p.remainingstock
           FROM Product_Basket pb 
           JOIN Basket b ON pb.basketid = b.basketid 
           JOIN Product p ON pb.productid = p.productid 
@@ -59,10 +59,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Calculate the total price
 $total = 0;
 $products = [];
+$errorStrings = [];
 while ($product = oci_fetch_assoc($stmt)) {
     $products[] = $product;
     $discount= checkDiscount($product['PRODUCTID']);
     $total += $discount?($product['PRICE']-($discount['DISCOUNTPERCENT']/100*$product['PRICE'])):$product['PRICE'] * $product['QUANTITY'] ; 
+    $remainingstock= $product['REMAININGSTOCK'];
+
+    if ($product['QUANTITY'] > $remainingstock) {
+        $errorStrings[] = 'alert("Not enough stock for ' . addslashes($product['NAME']) . '. Only ' . $product['REMAININGSTOCK'] . ' remaining.");';
+    }
 }
 
 $slots = getCollectionSlots($conn);
@@ -70,6 +76,8 @@ $slots = getCollectionSlots($conn);
 
 
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -166,7 +174,9 @@ $slots = getCollectionSlots($conn);
     text-align: left;
     align-items: stretch;
 }        
-
+        .disabled{
+            background-color:#d6d6d6 !important;
+        }
     </style>
      <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -254,12 +264,23 @@ $slots = getCollectionSlots($conn);
         </div>
         </div>
         <div class="btn-group">
-            <button type="submit" class="confirm-btn">Confirm</button>
+            <button type="submit" class="confirm-btn <?= empty($errorStrings)? '':'disabled' ?>" <?= empty($errorStrings)? 'lol':'disabled' ?>>Confirm</button>
             <button type="button" class="back-btn" onclick="window.history.back()">Back</button>
         </div>
     </form>
 </div>
 
+<?php 
+    echo '<script type="text/javascript">';
+
+foreach ($errorStrings as $err) {
+
+    echo $err;
+
+}
+echo '</script>';    
+
+?>
     
 <?php include 'footer.php'; ?>
 </body>

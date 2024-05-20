@@ -548,3 +548,56 @@ function checkDiscount($product_id) {
         return false; // Return false if no active discount
     }
 }
+
+
+function reduceQuantity($productId, $amount) {
+    include 'config.php';
+
+    // Fetch current quantity
+    $query = "SELECT remainingstock FROM Product WHERE productid = :productid";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':productid', $productId);
+    oci_execute($stmt);
+    $product = oci_fetch_assoc($stmt);
+
+    if (!$product) {
+        throw new Exception("Product not found.");
+    }
+
+    $currentStock = $product['REMAININGSTOCK'];
+
+    if ($currentStock < $amount) {
+        throw new Exception("Insufficient stock available.");
+    }
+
+    // Reduce the quantity
+    $newStock = $currentStock - $amount;
+    $updateQuery = "UPDATE Product SET remainingstock = :newstock WHERE productid = :productid";
+    $updateStmt = oci_parse($conn, $updateQuery);
+    oci_bind_by_name($updateStmt, ':newstock', $newStock);
+    oci_bind_by_name($updateStmt, ':productid', $productId);
+
+    if (!oci_execute($updateStmt)) {
+        throw new Exception("Failed to update the product quantity.");
+    }
+
+    oci_close($conn);
+
+    return $newStock;
+}
+
+function getRemainingStock($productId) {
+    include 'config.php';
+    $query = "SELECT remainingstock FROM Product WHERE productid = :productid";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':productid', $productId);
+    oci_execute($stmt);
+    
+    $result = oci_fetch_assoc($stmt);
+    
+    if ($result) {
+        return $result['REMAININGSTOCK'];
+    } else {
+        return null;
+    }
+}

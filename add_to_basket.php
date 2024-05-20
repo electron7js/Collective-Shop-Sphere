@@ -1,6 +1,6 @@
 <?php
 session_start();
-ob_start(); // Start output buffering
+ob_start(); 
 
 header('Content-Type: application/json');
 
@@ -21,18 +21,25 @@ oci_execute($stmt);
 $user = oci_fetch_assoc($stmt);
 $userid = $user['USERID'];
 
-// Get the product ID from the request
 $data = json_decode(file_get_contents("php://input"), true);
 $productid = $data['product_id'];
 
+if(getRemainingStock($productid)>=1){
+
 $result = addToBasket($userid, $productid);
 
-if ($result) {
-    // Clean (erase) the output buffer and send JSON response
-    ob_end_clean();
-    echo json_encode(['success' => true]);
-} else {
-    // Clean (erase) the output buffer and send JSON response
-    ob_end_clean();
-    echo json_encode(['success' => false, 'message' => 'Failed to add product to basket']);
+       if ($result) {
+                ob_end_clean();
+                echo json_encode(['success' => true]);
+            } 
+        else {
+                ob_end_clean();
+                echo json_encode(['success' => false, 'message' => 'Failed to add product to basket']);
+        }
 }
+
+else{
+    ob_end_clean();
+    echo json_encode(['success' => false, 'message' => 'Failed to add product to basket, Out of stock']);
+}
+

@@ -29,6 +29,23 @@ oci_bind_by_name($stmt, ':method', $method);
 oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
 $result = oci_execute($stmt);
 
+
+$quantityquery = "SELECT p.productid, p.name, p.price, pd.quantity 
+          FROM Product p
+          JOIN Purchase_detail pd ON pd.productid =p.productid
+          WHERE pd.purchaseid = :purchaseid";
+$stmt = oci_parse($conn, $quantityquery);
+oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
+oci_execute($stmt);
+
+
+while ($product = oci_fetch_assoc($stmt)) {
+    reduceQuantity($product['PRODUCTID'],$product['QUANTITY']);
+}
+
+
+
+
 if ($result) {
     // Confirm the purchase
     $confirmResult = confirmPurchase($purchaseid);
