@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = oci_fetch_assoc($stmt);
 
     // Verify the password
-    if ($user && ($password== $user['PASSWORD'])) {
+    if ($user && password_verify($password,$user['PASSWORD'])) {
         // Password is correct, start the session
         $_SESSION['username'] = $username;
         header("Location: index.php");

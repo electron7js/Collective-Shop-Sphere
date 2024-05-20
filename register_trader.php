@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = oci_parse($conn, $query);
             oci_bind_by_name($stmt, ':username', $username);
             oci_bind_by_name($stmt, ':email', $email);
-            oci_bind_by_name($stmt, ':password', $password);
+            oci_bind_by_name($stmt, ':password', $hashed_password);
             oci_bind_by_name($stmt, ':user_id', $user_id);
             oci_execute($stmt);
 

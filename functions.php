@@ -456,3 +456,29 @@ function saveProductImage($imageInput) {
     // Return the file name
     return $targetFilePath;
 }
+
+function hasPurchasedItem($userid, $productid) {
+    include 'config.php'; // Include your database connection
+
+    // Query to check if the user has bought the specific product and the purchase is confirmed
+    $query = "
+        SELECT COUNT(*) AS purchase_count
+        FROM Purchase p
+        JOIN Purchase_detail pd ON p.purchaseid = pd.purchaseid
+        WHERE p.userid = :userid
+          AND pd.productid = :productid
+          AND p.confirmed = 1
+    ";
+
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':userid', $userid);
+    oci_bind_by_name($stmt, ':productid', $productid);
+    oci_execute($stmt);
+
+    $result = oci_fetch_assoc($stmt);
+    oci_close($conn);
+
+    // Check if there are any purchases
+    return $result['PURCHASE_COUNT'] > 0;
+}
+

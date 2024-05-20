@@ -30,6 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form data
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
     $contact_number = $_POST['contact_number'];
     $email = $_POST['email'];
     $gender = $_POST['gender'];
@@ -44,6 +46,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = $e->getMessage();
         }
     }
+
+    if (!empty($password)) {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $query = "UPDATE Users SET password = :password WHERE userid = :userid";
+        $stmt = oci_parse($conn, $query);
+        oci_bind_by_name($stmt, ':password', $hashed_password);
+        oci_bind_by_name($stmt, ':userid', $user['USERID']);
+        oci_execute($stmt);
+    }
+
 
     // Update the Users table
     $query = "UPDATE Users 
@@ -189,6 +201,14 @@ oci_close($conn);
         <div class="form-group">
             <label for="last_name">Last Name</label>
             <input type="text" id="last_name" name="last_name" value="<?php echo $user['LASTNAME']; ?>" required>
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="<?= $user['USERNAME'] ?>" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password (leave blank if not changing)</label>
+            <input type="password" id="password" name="password">
         </div>
         <div class="form-group">
             <label for="contact_number">Contact Number</label>
