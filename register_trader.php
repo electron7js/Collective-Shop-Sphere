@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             oci_execute($stmt);
 
             // Insert into Shop table
-            $query = "INSERT INTO Shop (shopid, name, description, location, logo, activestatus, userid) VALUES (seq_shopid.NEXTVAL, :shop_name, :shop_description, :shop_address, 'default_logo.png', 1, :userid)";
+            $query = "INSERT INTO Shop (shopid, name, description, location, logo, activestatus, userid) VALUES (seq_shopid.NEXTVAL, :shop_name, :shop_description, :shop_address, 'default_logo.png', 0, :userid)";
             $stmt = oci_parse($conn, $query);
             oci_bind_by_name($stmt, ':shop_name', $shop_name);
             oci_bind_by_name($stmt, ':shop_description', $shop_description);

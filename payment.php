@@ -16,14 +16,27 @@ if (!$purchaseid) {
 }
 
 // Fetch purchase total
-$query = "SELECT SUM(pd.price * pd.quantity) AS total
-          FROM Purchase_detail pd
+
+
+include 'functions.php';
+$query = "SELECT p.productid, p.name, p.price, pd.quantity 
+          FROM Product p
+          JOIN Purchase_detail pd ON pd.productid =p.productid
           WHERE pd.purchaseid = :purchaseid";
 $stmt = oci_parse($conn, $query);
 oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
 oci_execute($stmt);
-$row = oci_fetch_assoc($stmt);
-$total = $row['TOTAL'];
+
+
+$products = [];
+$total = 0;
+
+while ($product = oci_fetch_assoc($stmt)) {
+    $products[] = $product;
+    
+    $discount= checkDiscount($product['PRODUCTID']);
+    $total += $discount?($product['PRICE']-($discount['DISCOUNTPERCENT']/100*$product['PRICE'])):$product['PRICE'] * $product['QUANTITY'] ; 
+}
 
 oci_close($conn);
 ?>

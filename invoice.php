@@ -54,8 +54,13 @@ $stmt = oci_parse($conn, $query);
 oci_bind_by_name($stmt, ':purchaseid', $purchaseid);
 oci_execute($stmt);
 $items = [];
+$total = 0;
+
 while ($row = oci_fetch_assoc($stmt)) {
     $items[] = $row;
+    $discount= checkDiscount($row['PRODUCTID']);
+    $total += $discount?($row['PRICE']-($discount['DISCOUNTPERCENT']/100*$row['PRICE'])):$row['PRICE'] * $row['QUANTITY'] ; 
+
 }
 
 oci_close($conn);
@@ -131,9 +136,10 @@ oci_close($conn);
     <table style="margin:0px;">
         <thead>
             <tr>
-                <th style="width:30%">Item</th>
+                <th style="width:20%">Item</th>
                 <th>Quantity</th>
-                <th>Cost</th>
+                <th>Rate</th>
+                <th>Discount</th>
                 <th>Amount</th>
             </tr>
         </thead>
@@ -143,17 +149,20 @@ oci_close($conn);
         <tbody>
             <?php foreach ($items as $index => $item): ?>
                 <tr>
-                    <td><?= $item['NAME'] ?></td>
-                    <td><?= $item['QUANTITY'] ?></td>
+                    <td style="width:25%" ><?= $item['NAME'] ?></td>
+                    <td style="width:15%" ><?= $item['QUANTITY'] ?></td>
                     <td>$<?= number_format($item['PRICE'], 2) ?></td>
-                    <td>$<?= number_format($item['AMOUNT'], 2) ?></td>
+                    <td><?php 
+            $discount = checkDiscount($item['PRODUCTID']);
+            echo  ($discount?$discount['DISCOUNTPERCENT']:0 ).'%'; ?></td>
+                    <td>$<?= number_format($item['PRICE']-(($discount?$discount['DISCOUNTPERCENT']:0)/100*$item['PRICE']), 2)?></td>
                 </tr>
             <?php endforeach; ?>
 
         </tbody>
 
     </table>
-    <p>Total: $<?= number_format(array_sum(array_column($items, 'AMOUNT')), 2) ?></p>
+    <p>Total: $<?= $total?></p>
 
     </div>
 </div>

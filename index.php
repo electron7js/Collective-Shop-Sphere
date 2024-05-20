@@ -28,6 +28,9 @@
         .wishlist-btn{
 
         }
+        .discounted{
+            text-decoration:line-through;
+        }
     </style>
 </head>
 
@@ -36,19 +39,9 @@
     <?php
     // Include the config.php file
     include 'config.php';
-
-    // Fetch categories
-    $category_query = "SELECT * FROM Category";
-    $category_stmt = oci_parse($conn, $category_query);
-    oci_execute($category_stmt);
-
-    // Fetch shops
-    $shop_query = "SELECT * FROM Shop";
-    $shop_stmt = oci_parse($conn, $shop_query);
-    oci_execute($shop_stmt);
-
+    include 'functions.php';
     // Fetch products
-    $product_query = "SELECT * FROM Product";
+    $product_query = "SELECT p.* FROM Product p JOIN Shop s ON p.shopid=s.shopid WHERE s.activestatus>0";
     $product_stmt = oci_parse($conn, $product_query);
     oci_execute($product_stmt);
     ?>
@@ -90,7 +83,16 @@ include 'header.php';
 
                         <h2 class="product-brand"><?php echo $product['NAME']; ?></h2>
                         </a>
-                        <span class="price">$<?php echo number_format($product['PRICE'], 2); ?></span>
+                       <?php
+                        $discount=checkDiscount($product['PRODUCTID']);
+                        if($discount!=false){
+                            echo  '<span class="price discounted">$'.number_format($product['PRICE'], 2).'</span>';
+                            echo  '<span class="price">$'.number_format($product['PRICE']-($discount['DISCOUNTPERCENT']/100*$product['PRICE']), 2).'</span>';
+                        }
+                        else{
+                        echo  '<span class="price">$'.number_format($product['PRICE'], 2).'</span>';
+
+                    } ?>
                 </div>
             </div>
             <?php endwhile; ?>

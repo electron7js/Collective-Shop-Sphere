@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Insert the product details into the Product table
         $query = "INSERT INTO Product (productid, name, description, image, price, remainingstock, activestatus, brandid, categoryid, shopid) 
-                  VALUES (seq_productid.NEXTVAL, :name, :description, :image, :price, :stock, 1, :brandid, :categoryid, :shopid)";
+                  VALUES (seq_productid.NEXTVAL, :name, :description, :image, :price, :stock, 0, :brandid, :categoryid, :shopid)";
         $stmt = oci_parse($conn, $query);
         oci_bind_by_name($stmt, ':name', $productName);
         oci_bind_by_name($stmt, ':description', $productDescription);

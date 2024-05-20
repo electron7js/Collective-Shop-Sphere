@@ -7,7 +7,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 include 'config.php';
-
+include 'functions.php';
 $userRole = $_SESSION['user_role'];
 
 if ($userRole != 'Customer') {
@@ -184,6 +184,9 @@ oci_close($conn);
     <div class="button-group">
         <button class="edit-profile-btn" onclick="window.location.href='customerorders.php'">Order History</button>
         <button class="edit-profile-btn" onclick="window.location.href='customer_edit_profile.php'">Edit Profile</button>
+        <?php if (!checktVerifiedStatus($username)): ?>
+            <button class="edit-profile-btn" onclick="window.location.href='verification_page.php'">Verify Account</button>
+                <?php endif; ?>
         <button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
     </div>
 

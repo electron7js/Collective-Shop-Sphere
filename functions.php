@@ -482,3 +482,69 @@ function hasPurchasedItem($userid, $productid) {
     return $result['PURCHASE_COUNT'] > 0;
 }
 
+function getUserid($username){
+    include 'config.php';
+
+    $query = "
+    SELECT userid 
+    FROM users
+    WHERE username = :username";
+
+$stmt = oci_parse($conn, $query);
+oci_bind_by_name($stmt, ':username', $username);
+oci_execute($stmt);
+
+$result = oci_fetch_assoc($stmt);
+oci_close($conn);
+
+return $result['USERID'];
+
+}
+
+function checktVerifiedStatus($username){
+    include 'config.php'; 
+
+    $query = "
+    SELECT Verified 
+    FROM users u Join Customer c on u.userid=c.userid
+    WHERE username = :username";
+
+$stmt = oci_parse($conn, $query);
+oci_bind_by_name($stmt, ':username', $username);
+oci_execute($stmt);
+
+$result = oci_fetch_assoc($stmt);
+oci_close($conn);
+
+return $result['VERIFIED']>0;
+
+}
+
+function checkDiscount($product_id) {
+    include 'config.php'; // Include the database connection
+
+    // Prepare the query to fetch discount details for the given product ID
+    $query = "
+        SELECT d.discountid, d.discountpercent, d.startdate, d.enddate
+        FROM Discount d
+        JOIN Product_Discount pd ON d.discountid = pd.discountid
+        WHERE pd.productid = :productid
+          AND d.startdate <= SYSDATE
+          AND d.enddate >= SYSDATE";
+    
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':productid', $product_id);
+    oci_execute($stmt);
+
+    // Fetch the discount details
+    $discount = oci_fetch_assoc($stmt);
+
+    oci_close($conn); // Close the database connection
+
+    // Check if a discount is active
+    if ($discount) {
+        return $discount; // Return the discount details if active
+    } else {
+        return false; // Return false if no active discount
+    }
+}

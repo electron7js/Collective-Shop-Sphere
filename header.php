@@ -4,6 +4,13 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 ?>
 
+<script>
+        function confirmLogout(event) {
+            if (!confirm("Are you sure you want to log out?")) {
+                event.preventDefault();
+            }
+        }
+    </script>
 
 <header style="z-index:10;">
     <nav>
@@ -14,14 +21,18 @@ if (session_status() == PHP_SESSION_NONE) {
             <li><a href="shop.php">Shop</a></li>
             <?php if (isset($_SESSION['username'])): ?>
                 <li><a href="dashboard.php">Dashboard</a></li>
-                <li><a href="logout.php">Logout</a></li>
-                <li><a href="wishlist.php">My wishlist</a></li>
+                <li><a href="logout.php" onclick="confirmLogout(event)">Logout</a></li>
 
             <?php else: ?>
                 <li><a href="login.php">Login</a></li>
                 <li><a href="register.php">Register</a></li>
             <?php endif; ?>
-            <li class="cart-icon"><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+
+            <?php if ((isset($_SESSION['user_role'])) && ($_SESSION['user_role']== 'Customer')): ?>
+                <li><a href="wishlist.php">My wishlist</a></li>
+                <li class="cart-icon"><a href="#"><i class="fas fa-shopping-cart"></i></a></li>                
+                <?php endif; ?>
+
         </ul>   
         <ul>
             <li><a class="logo" href="index.php"><img src="images/logo.png" alt="Collective Shop Sphere"></a></li>
@@ -30,14 +41,17 @@ if (session_status() == PHP_SESSION_NONE) {
             <li class="hideOnMobile"><a href="shop.php">Shop</a></li>
             <?php if (isset($_SESSION['username'])): ?>
                 <li class="hideOnMobile"><a href="dashboard.php"><?php echo htmlspecialchars($_SESSION['username']); ?>'s<br> Dashboard</a></li>
-                <li class="hideOnMobile"><a href="logout.php">Logout</a></li>
-                <li><a href="wishlist.php">My wishlist</a></li>
+                <li><a href="logout.php" onclick="confirmLogout(event)">Logout</a></li>
             <?php else: ?>
                 <li class="hideOnMobile"><a href="login.php">Login</a></li>
                 <li class="hideOnMobile"><a href="register.php">Register</a></li>
             <?php endif; ?>
-            <li class="hideOnMobile cart-icon"><a href="basket"><i class="fas fa-shopping-cart"></i></a></li>
+            <?php if ((isset($_SESSION['user_role'])) && ($_SESSION['user_role']== 'Customer')): ?>
+                <li><a href="wishlist.php">My wishlist</a></li>
+                <li class="hideOnMobile cart-icon"><a href="basket"><i class="fas fa-shopping-cart"></i></a></li>
             <li class="menu-button" onclick="showSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="26"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+            <?php endif; ?>
+
         </ul>
     </nav>  
 </header>

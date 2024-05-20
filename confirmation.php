@@ -34,13 +34,25 @@ $basketItems = getBasketItems($userid);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Create the purchase and get the purchase ID
+
+    if(checktVerifiedStatus($username)){
     $collection_slot_id = $_POST['collection_slot_id'];
 
     $purchaseid = createPurchase($userid, $basketItems,$collection_slot_id);
 
     // Redirect to the payment page
     header("Location: payment.php?purchaseid=" . $purchaseid);
-    exit();
+    exit();}
+
+    else{
+        echo '<script type="text/javascript">';
+
+        echo 'alert("You are not verified. Please verify your account first.");';
+        echo 'window.location.href = "dashboard.php";'; // Redirect to the verification page or any other page
+
+
+        echo '</script>';    }
+
 }
 
 
@@ -49,7 +61,8 @@ $total = 0;
 $products = [];
 while ($product = oci_fetch_assoc($stmt)) {
     $products[] = $product;
-    $total += $product['PRICE'] * $product['QUANTITY'];
+    $discount= checkDiscount($product['PRODUCTID']);
+    $total += $discount?($product['PRICE']-($discount['DISCOUNTPERCENT']/100*$product['PRICE'])):$product['PRICE'] * $product['QUANTITY'] ; 
 }
 
 $slots = getCollectionSlots($conn);
@@ -185,9 +198,10 @@ $slots = getCollectionSlots($conn);
     <hr>
     <div class="bill-header">
     <span style="width:5%">SN</span>
-    <span style="width:30%">Name</span>
+    <span style="width:20%">Name</span>
     <span style="width:12%">Quantity</span>
     <span style="width:10%">Rate</span>
+    <span style="width:10%">Discount</span>
     <span style="width:8%">Net</span>
 
 
@@ -195,9 +209,17 @@ $slots = getCollectionSlots($conn);
     <ul class="product-list">
         <?php foreach ($products as $index => $product): ?>
             <li>
-               <span style="width:5%"><?php echo ($index + 1) . ') '; ?></span><span style="text-align:left;width:30%;"><?php echo  $product['NAME']; ?></span><span style="text-align:left; width:10%;"><?php echo  $product['QUANTITY']; ?>
-            </span><span style="text-align:left; width:10%;"><?php echo '$'.$product['PRICE']; ?></span>
-                <span style="text-align:left; width:10%;"><?php echo '$' . number_format($product['PRICE']*$product['QUANTITY'], 2); ?></span>
+               <span style="width:5%"><?php echo ($index + 1) . ') '; ?></span>
+               <span style="text-align:left;width:20%;"><?php echo  $product['NAME']; ?></span>
+            <span style="text-align:left; width:10%;"><?php echo  $product['QUANTITY']; ?></span>
+         
+            </span><span style="text-align:left; width:10%;">
+            <?php echo '$'.$product['PRICE']; ?></span>
+            <span style="text-align:left; width:10%;"><?php 
+            $discount = checkDiscount($product['PRODUCTID']);
+            echo  ($discount?$discount['DISCOUNTPERCENT']:0 ).'%'; ?>
+</span>
+                <span style="text-align:left; width:10%;"><?php echo '$' . number_format($product['PRICE']-(($discount?$discount['DISCOUNTPERCENT']:0)/100*$product['PRICE']), 2); ?></span>
             </li>
         <?php endforeach; ?>
     </ul>

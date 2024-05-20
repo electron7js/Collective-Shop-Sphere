@@ -29,13 +29,14 @@ oci_bind_by_name($stmt, ':userid', $userid);
 oci_execute($stmt);
 
 $products = [];
+
+$total = 0;
+$products = [];
 while ($product = oci_fetch_assoc($stmt)) {
     $products[] = $product;
+    $discount= checkDiscount($product['PRODUCTID']);
+    $total += $discount?($product['PRICE']-($discount['DISCOUNTPERCENT']/100*$product['PRICE'])):$product['PRICE'] * $product['QUANTITY'] ; 
 }
-
-$total = array_reduce($products, function ($sum, $product) {
-    return $sum + ($product['PRICE'] * $product['QUANTITY']);
-}, 0);
 
 oci_close($conn);
 ?>
@@ -96,6 +97,9 @@ oci_close($conn);
         .price, .quantity, .total {
             font-size: 18px;
             font-weight: bold;
+        }
+        .discounted{
+            text-decoration:line-through;
         }
         .actions {
             display: flex;
@@ -210,7 +214,17 @@ oci_close($conn);
             <div class="product-info">
                 <div class="product-details">
                 <h2 class="product-name"><?php echo $product['NAME']; ?></h2>
-                <span class="price">$<?php echo number_format($product['PRICE'], 2); ?></span>
+
+                <?php
+                        $discount=checkDiscount($product['PRODUCTID']);
+                        if($discount!=false){
+                            echo  '<span class="price discounted">$'.number_format($product['PRICE'], 2).'</span>';
+                            echo  '<span class="price">$'.number_format($product['PRICE']-($discount['DISCOUNTPERCENT']/100*$product['PRICE']), 2).'</span>';
+                        }
+                        else{
+                        echo  '<span class="price">$'.number_format($product['PRICE'], 2).'</span>';
+
+                    } ?>
                 <div class="quantity">
                     <select class="quantity-selector" id="quantity-<?php echo $product['PRODUCTID']; ?>" onchange="updateQuantity(<?php echo $product['PRODUCTID']; ?>, this.value)">
                         <?php for ($i = 1; $i <= 10; $i++): ?>

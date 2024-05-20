@@ -47,14 +47,10 @@
     oci_execute($category_stmt);
 
     // Fetch shops
-    $shop_query = "SELECT * FROM Shop";
+    $shop_query = "SELECT * FROM Shop WHERE ACTIVESTATUS>0";
     $shop_stmt = oci_parse($conn, $shop_query);
     oci_execute($shop_stmt);
 
-    // Fetch products
-    $product_query = "SELECT * FROM Product";
-    $product_stmt = oci_parse($conn, $product_query);
-    oci_execute($product_stmt);
     ?>
 <?php
 include 'header.php';

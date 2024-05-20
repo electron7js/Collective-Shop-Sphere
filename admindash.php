@@ -87,6 +87,10 @@ oci_close($conn);
         <button class="action-btn" onclick="window.location.href='admin_edit_trader.php'">Edit Trader Details</button>
         <button class="action-btn" onclick="window.location.href='admin_edit_shop.php'">Edit Shop Details</button>
         <button class="action-btn" onclick="window.location.href='admin_view_orders.php'">View All Orders</button>
+        <button class="action-btn" onclick="window.location.href='admin_verify_products.php'">Verify Products</button>
+        <button class="action-btn" onclick="window.location.href='admin_verify_shops.php'">Verify Shops</button>
+        <button class="action-btn" onclick="window.location.href='admin_view_payments.php'">View Payments</button>
+        <button class="action-btn" onclick="window.location.href='admin_review_reviews.php'">Review Reviews</button>
     </div>
 </div>
 

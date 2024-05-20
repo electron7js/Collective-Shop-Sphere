@@ -1,44 +1,36 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['username']) || $_SESSION['user_role'] !== 'Admin') {
     header('Location: login.php');
     exit();
 }
 
 include 'config.php';
 
-$userRole = $_SESSION['user_role'];
+$startDate = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$endDate = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
-if ($userRole != 'Customer') {
-    header('Location: dashboard.php');
-    exit();
-} 
-
-// Get the logged-in user's username
-$username = $_SESSION['username'];
-
-// Fetch customer details using JOIN query
+// Fetch all orders within the date range if specified
 $query = "
-    SELECT u.userid 
-    FROM Users u
-    WHERE u.username = :username
-";
-$stmt = oci_parse($conn, $query);
-oci_bind_by_name($stmt, ':username', $username);
-oci_execute($stmt);
-$user = oci_fetch_assoc($stmt);
-$userid = $user['USERID'];
-
-// Fetch orders for the customer
-$query = "
-    SELECT p.purchaseid, p.purchase_date, p.confirmed
+    SELECT p.purchaseid, p.purchase_date, p.confirmed, u.username
     FROM Purchase p
-    WHERE p.userid = :userid
-    ORDER BY p.purchase_date DESC
+    JOIN Users u ON p.userid = u.userid
 ";
+
+if ($startDate && $endDate) {
+    $query .= "WHERE p.purchase_date BETWEEN TO_DATE(:start_date, 'YYYY-MM-DD') AND TO_DATE(:end_date, 'YYYY-MM-DD') ";
+}
+
+$query .= "ORDER BY p.purchase_date DESC";
+
 $stmt = oci_parse($conn, $query);
-oci_bind_by_name($stmt, ':userid', $userid);
+
+if ($startDate && $endDate) {
+    oci_bind_by_name($stmt, ':start_date', $startDate);
+    oci_bind_by_name($stmt, ':end_date', $endDate);
+}
+
 oci_execute($stmt);
 
 $orders = [];
@@ -49,13 +41,12 @@ while ($order = oci_fetch_assoc($stmt)) {
 oci_close($conn);
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order History - Collective Shop Sphere</title>
+    <title>All Orders - Collective Shop Sphere</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -64,7 +55,6 @@ oci_close($conn);
             font-family: Arial, sans-serif;
         }
         .container {
-            min-height:70vh;
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
@@ -122,6 +112,24 @@ oci_close($conn);
         img{
             width: 3rem;
         }
+        .filter-form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .filter-form input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .filter-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -129,7 +137,20 @@ oci_close($conn);
 <?php include 'header.php'; ?>
 
 <div class="container">
-    <h2>Order History</h2>
+    <h2>All Orders</h2>
+
+    <form method="get" class="filter-form">
+        <div>
+            <label for="start_date">Start Date: </label>
+            <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($startDate) ?>">
+        </div>
+        <div>
+            <label for="end_date">End Date: </label>
+            <input type="date" id="end_date" name="end_date" value="<?= htmlspecialchars($endDate) ?>">
+        </div>
+        <button type="submit">Filter</button>
+    </form>
+
     <ul class="order-list">
         <?php foreach ($orders as $order): ?>
             <li>
@@ -137,6 +158,7 @@ oci_close($conn);
                     <img style="object-fit:contain" src="images/order_placeholder.png" alt="Order Image" style="width: 50px; height: 50px; margin-right: 20px;">
                     <div class="order-details">
                         <span>Order ID: <?= $order['PURCHASEID'] ?></span>
+                        <span>Customer: <?= $order['USERNAME'] ?></span>
                         <span class="order-date">Date: <?= date('l, F j, Y', strtotime($order['PURCHASE_DATE'])) ?></span>
                         <span class="order-status <?= $order['CONFIRMED'] ? 'confirmed' : '' ?>">
                             <?= $order['CONFIRMED'] ? 'Payment Confirmed' : 'Payment Not Confirmed' ?>

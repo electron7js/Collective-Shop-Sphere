@@ -53,7 +53,7 @@
     oci_execute($shop_stmt);
 
     // Fetch products
-    $product_query = "SELECT * FROM Product";
+    $product_query = "SELECT p.* FROM Product p JOIN Shop s ON p.shopid=s.shopid WHERE s.activestatus>0";
     $product_stmt = oci_parse($conn, $product_query);
     oci_execute($product_stmt);
     ?>

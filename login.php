@@ -3,6 +3,7 @@ session_start();
 
 // Include the config.php file for database connection
 include 'config.php';
+include 'functions.php';
 
 // Variable to hold error messages
 $error = '';
@@ -25,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($password,$user['PASSWORD'])) {
         // Password is correct, start the session
         $_SESSION['username'] = $username;
+        $_SESSION['user_role']=checkUserRole($username, $conn);
         header("Location: index.php");
         exit;
     } else {

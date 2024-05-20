@@ -1,6 +1,9 @@
 <?php
-// Include the config.php file for database connection
+session_start();
+
+// Include the config.php file for database connection and functions
 include 'config.php';
+include 'functions.php';
 
 // Fetch product ID from the URL
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -10,7 +13,6 @@ if ($product_id <= 0) {
     echo "Invalid product ID.";
     exit;
 }
-
 
 // Prepare the query to fetch product details
 $query = "SELECT * FROM Product WHERE productid = :productid";
@@ -27,9 +29,55 @@ if (!$product) {
     exit;
 }
 
-// Close the database connection
+// Fetch reviews for the product
+$query = "SELECT r.*, u.username FROM Review r JOIN Users u ON r.userid = u.userid WHERE r.productid = :productid ORDER BY r.reviewdate DESC";
+$stmt = oci_parse($conn, $query);
+oci_bind_by_name($stmt, ':productid', $product_id);
+oci_execute($stmt);
+
+$reviews = [];
+while ($review = oci_fetch_assoc($stmt)) {
+    $reviews[] = $review;
+}
+
+// Check if the user has bought the product
+$canSubmitReview = false;
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+    $user_id = getUserid($username);
+    $canSubmitReview = hasPurchasedItem($user_id, $product_id)>0;
+}
+
+
+
+// Handle review submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $canSubmitReview) {
+    $rating = $_POST['rating'];
+    $body = $_POST['body'];
+    $review_date = date('Y-m-d');
+
+    $query = "INSERT INTO Review (reviewid, reviewdate, rating, body, productid, userid) VALUES (seq_reviewid.NEXTVAL, TO_DATE(:reviewdate, 'YYYY-MM-DD'), :rating, :body, :productid, :userid)";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':reviewdate', $review_date);
+    oci_bind_by_name($stmt, ':rating', $rating);
+    oci_bind_by_name($stmt, ':body', $body);
+    oci_bind_by_name($stmt, ':productid', $product_id);
+    oci_bind_by_name($stmt, ':userid', $user_id);
+
+    if (oci_execute($stmt)) {
+        // Reload the page to display the new review
+        header("Location: product_details.php?id=" . $product_id);
+        exit();
+    } else {
+        echo "Error: Could not submit review.";
+    }
+}
+
 oci_close($conn);
 ?>
+<script>
+    console.log("<?php echo $canSubmitReview ?>");
+</script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -82,6 +130,66 @@ oci_close($conn);
     cursor: pointer;
     transition: .4s linear;
         }
+        .review-form {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .review-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .review-form input,
+        .review-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .review-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+        }
+        .reviews {
+            margin-top: 20px;
+            
+        }
+        .reviews h3 {
+            margin-bottom: 10px;
+        }
+        .review {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .review .rating {
+            color: #ffcc00;
+        }
+
+        .submit-review{
+            margin:5rem;
+        }
+      .others-reviews{
+        display:flex;
+      }
+      .others-reviews .review{
+        margin:3rem;
+      }
+      .main-wrap {
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    margin-top: -45vh;
+}
     </style>
 </head>
 <body>
@@ -135,32 +243,45 @@ oci_close($conn);
 </section>
 
 <section class="customer-reviews">
+
+
     <div class="left">
+    <div class="others-reviews">
+
         <h3>Reviews</h3>
-        <div class="star-ratings">
-            <div class="star-row">
-                <span class="stars">★★★★★</span>
-                <span class="count">(5)</span>
-            </div>
-            <div class="star-row">
-                <span class="stars">★★★★</span>
-                <span class="count">(4)</span>
-            </div>
-            <div class="star-row">
-                <span class="stars">★★★★★</span>
-                <span class="count">(5)</span>
-            </div>
-            <div class="star-row">
-                <span class="stars">★★★</span>
-                <span class="count">(3)</span>
-            </div>
+        <div class="reviews">
+            <?php foreach ($reviews as $review): ?>
+                <div class="review">
+                    <div class="rating"><?= str_repeat('★', (int)$review['RATING']) . str_repeat('☆', 5 - (int)$review['RATING']) ?></div>
+                    <div class="review-body"><?= nl2br(htmlspecialchars($review['BODY'])) ?></div>
+                    <div class="review-date"><?= date('F j, Y', strtotime($review['REVIEWDATE'])) ?> by <?= htmlspecialchars($review['USERNAME']) ?></div>
+                </div>
+            <?php endforeach; ?>
         </div>
+</div>
+        <div class="submit-review">
+        <?php if ($canSubmitReview): ?>
+            <h3>You've bought this product, Submit Your Review</h3>
+
+            <div class="review-form">
+                <form method="post" action="">
+                    <label for="rating">Rating (1-5):</label>
+                    <input type="number" id="rating" name="rating" min="1" max="5" required>
+                    
+                    <label for="body">Review:</label>
+                    <textarea id="body" name="body" rows="4" required></textarea>
+                    
+                    <button type="submit">Submit Review</button>
+                </form>
+            </div>
+        <?php endif; ?>
+    </div>
     </div>
 </section>
 </div>
 
-<?php include 'footer.php'; ?>
 
+<?php include 'footer.php'; ?>
 
 </body>
 </html>
