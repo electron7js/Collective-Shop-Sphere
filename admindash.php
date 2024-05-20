@@ -91,6 +91,8 @@ oci_close($conn);
         <button class="action-btn" onclick="window.location.href='admin_verify_shops.php'">Verify Shops</button>
         <button class="action-btn" onclick="window.location.href='admin_view_payments.php'">View Payments</button>
         <button class="action-btn" onclick="window.location.href='admin_review_reviews.php'">Review Reviews</button>
+        <button class="action-btn" onclick="window.location.href='admin_create_collection_slot.php'">Create Collection Slot</button>
+
     </div>
 </div>
 
