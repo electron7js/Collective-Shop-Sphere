@@ -190,6 +190,19 @@ oci_close($conn);
     background: white;
     margin-top: -45vh;
 }
+
+header{
+
+    min-height: 20vh !important;
+    margin-bottom: 80vh;
+
+}
+.image-gallery{
+    height:40vh;
+}
+.image-gallery img{
+    object-fit:contain;
+}
     </style>
 </head>
 <body>
