@@ -220,14 +220,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-group" style="display:flex">
                 <input type="checkbox" id="terms" name="terms" style="height:1rem; width:1rem; margin-right:1rem;" required> <p style="display:block;"> I hereby accept all the terms and conditions. </p>
             </div>
-            <button type="submit" class="submit-btn">Register</button>
+            <button type="submit" onclick="passwordValidation(event)" class="submit-btn">Register</button>
             <button type="button" class="submit-btn" onclick="window.location.href='register_trader.php'">Register as a trader</button>
         </form>
         <p>Already have an Account? <a href="login.php">login</a></p>
         </div>
     </div>
 </div>
+<script>
+function passwordValidation(event) {
+            console.log(event)
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirm_password').value;
 
+            if (password.length < 6) {
+                console.log(event);
+                alert('Password must be at least 6 characters long.');
+                event.preventDefault();
+            }
+            
+           else if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                event.preventDefault();
+            }
+            
+            return true;
+        }
+    </script>   
 <?php include 'footer.php'; ?>
 </body>
 </html>
