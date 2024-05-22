@@ -29,7 +29,7 @@ function sendVerificationEmail($userId) {
     $verificationCode = rand(100000, 999999);
 
     // Insert the verification code into the Verification table
-    $query = "INSERT INTO VerificationCodes (userid, code) VALUES (:userid, :verificationCode)";
+    $query = "INSERT INTO VerificationCodes (VERIFICATIONID,userid, code) VALUES (seq_verificationid.NEXTVAL,:userid, :verificationCode)";
     $stmt = oci_parse($conn, $query);
     oci_bind_by_name($stmt, ':userid', $userId);
     oci_bind_by_name($stmt, ':verificationCode', $verificationCode);
