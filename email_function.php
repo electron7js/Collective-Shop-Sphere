@@ -69,3 +69,62 @@ function sendVerificationEmail($userId) {
         throw new Exception("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
     }
 }
+
+
+function send_forgot_password_email($username, $email){
+    // Database connection
+    include 'config.php';
+
+    $query = "SELECT userid FROM Users WHERE username = :username";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':username', $username);
+    oci_execute($stmt);
+    $user = oci_fetch_assoc($stmt);
+
+    if (!$user) {
+        throw new Exception("User not found.");
+    }
+    // Generate a 6-digit verification code
+    $verificationCode = rand(100000, 999999);
+    $user_id=$user['USERID'];
+    // Insert the verification code into the Verification table
+    $query = "INSERT INTO VerificationCodes (VERIFICATIONID,userid, code) VALUES (seq_verificationid.NEXTVAL,:userid, :verificationCode)";
+    $stmt = oci_parse($conn, $query);
+    oci_bind_by_name($stmt, ':userid', $user_id);
+    oci_bind_by_name($stmt, ':verificationCode', $verificationCode);
+
+    // Ensure the statement is executed correctly
+    if (!oci_execute($stmt)) {
+        $e = oci_error($stmt); // For oci_execute errors pass the statement handle
+        throw new Exception($e['message']);
+    }
+
+    // Send email using PHPMailer
+    $mail = new PHPMailer(true);
+
+    try {
+        // Server settings
+        $mail->SMTPDebug = 0;                                 // Enable verbose debug output
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = 'smtp.gmail.com';                     // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = 'bijeshmanstha';           // SMTP username
+        $mail->Password = 'owbiieityojdygir';                    // SMTP password
+        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 587;                                    // TCP port to connect to
+
+        //Recipients
+        $mail->setFrom('bijeshmanstha@gmail.com', 'CSS');
+        $mail->addAddress($email);                            // Add a recipient
+
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Password Reset';
+        $mail->Body = "Follow this link to reset your password: <br><a href='http://localhost/frontend/reset_password.php?token=$verificationCode&user_id=$user_id'>Click here to reset password</a>";
+
+        $mail->send();
+    } catch (Exception $e) {
+        throw new Exception("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+    }
+}
