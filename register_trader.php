@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = 'Email or username already exists.';
         } else {
             // Hash the password
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $hashed_password = md5($password);
 
             // Insert into Users table and get the user ID
             $user_id = 0;

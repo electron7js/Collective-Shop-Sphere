@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!empty($password)) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $hashed_password = md5($password);
         $query = "UPDATE Users SET password = :password WHERE userid = :userid";
         $stmt = oci_parse($conn, $query);
         oci_bind_by_name($stmt, ':password', $hashed_password);

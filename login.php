@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = oci_fetch_assoc($stmt);
 
     // Verify the password
-    if ($user && password_verify($password,$user['PASSWORD'])) {
+    if ($user && (md5($password)==$user['PASSWORD'])) {
         // Password is correct, start the session
         $_SESSION['username'] = $username;
         $_SESSION['user_role']=checkUserRole($username, $conn);
@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Close the database connection
     oci_close($conn);
+    echo md5($password);
 }
 ?>
 

@@ -59,7 +59,7 @@ $total = 0;
 while ($row = oci_fetch_assoc($stmt)) {
     $items[] = $row;
     $discount= checkDiscount($row['PRODUCTID']);
-    $total += $discount?($row['PRICE']-($discount['DISCOUNTPERCENT']/100*$row['PRICE'])):$row['PRICE'] * $row['QUANTITY'] ; 
+    $total +=( $discount?($row['PRICE']-($discount['DISCOUNTPERCENT']/100*$row['PRICE'])):$row['PRICE'] )* $row['QUANTITY'] ; 
 
 }
 
@@ -155,7 +155,7 @@ oci_close($conn);
                     <td><?php 
             $discount = checkDiscount($item['PRODUCTID']);
             echo  ($discount?$discount['DISCOUNTPERCENT']:0 ).'%'; ?></td>
-                    <td>$<?= number_format($item['PRICE']-(($discount?$discount['DISCOUNTPERCENT']:0)/100*$item['PRICE']), 2)?></td>
+                    <td>$<?= number_format($item['PRICE']*$item['QUANTITY']*(1-(($discount?$discount['DISCOUNTPERCENT']:0)/100)), 2)?></td>
                 </tr>
             <?php endforeach; ?>
 

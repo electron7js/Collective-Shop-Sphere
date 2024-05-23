@@ -54,7 +54,7 @@ if (isset($_GET['token']) && isset($_GET['user_id'])  ) {
 
             if ($new_password === $confirm_password) {
                 // Hash the new password
-                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                $hashed_password = md5($new_password);
 
                 // Update the user's password in the database
                 $update_query = "UPDATE Users SET password = :password WHERE userid = :userid";
