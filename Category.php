@@ -30,6 +30,18 @@
     margin-top: 30vh;
 }
 
+.product-item{
+    display: block;
+    width: 30%;
+}
+
+.product-item img{
+    display: block;
+    width: 100%;
+    height: 20vh;
+    object-fit: contain;
+}
+
 .search-results {
     width: 50%;
 }
@@ -43,6 +55,8 @@
 
     $sortByPrice = isset($_POST['sortByPrice']) ? $_POST['sortByPrice'] : false;
     $sortByName = isset($_POST['sortByName']) ? $_POST['sortByName'] : false;
+    $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : 1;
+
 
     // Fetch categories
     $category_query = "SELECT * FROM Category";
@@ -55,9 +69,18 @@
     oci_execute($shop_stmt);
 
     // Fetch products
-    $product_query = "SELECT p.* FROM Product p JOIN Shop s ON p.shopid=s.shopid WHERE s.activestatus>0 ".($sortByPrice?"Order by p.price asc":'') .($sortByName?"Order by p.name asc":'') ;
+    $product_query = "SELECT p.* FROM Product p JOIN Shop s ON p.shopid=s.shopid WHERE s.activestatus>0 and p.categoryid=:category_id ".($sortByPrice?"Order by p.price asc":'') .($sortByName?"Order by p.name asc":'') ;
     $product_stmt = oci_parse($conn, $product_query);
+    oci_bind_by_name($product_stmt, ':category_id', $category_id);
     oci_execute($product_stmt);
+
+    $category_query = "SELECT * FROM category WHERE categoryid=:category_id ";
+    $category_query_stmt = oci_parse($conn, $category_query);
+    oci_bind_by_name($category_query_stmt, ':category_id', $category_id);
+    oci_execute($category_query_stmt);
+    $category = oci_fetch_assoc($category_query_stmt);
+    $category_title=$category['TITLE'];
+
     ?>
 <?php
 include 'header.php';
@@ -84,7 +107,7 @@ include 'header.php';
 
 
     <section class="featured-categories-section" style="position:relative; top:8vh;">
-        <h2 class="featured-categories-title">Featured Categories</h2>
+        <h2 class="featured-categories-title">All Categories</h2>
         <hr>
         <button class="featured-pre-btn"><img src="images/arrow.png" alt=""></button>
         <button class="featured-nxt-btn"><img src="images/arrow.png" alt=""></button>
@@ -103,33 +126,10 @@ include 'header.php';
         </div>
     </section>
 
-    <section id="product-quality">
-        <div class="quality">
-            <hr>
-            <h1>Description Regarding Our Product Quality</h1>
-            <p><br>At Collective Shop Sphere, we are committed to delivering excellence in every aspect of our service,
-                particularly in the quality of products available on our platform.
-                We carefully curate a selection of goods from trusted local vendors, ensuring that each product meets
-                our high standards for quality and reliability.<br><br>
-                We recognize the importance of offering products that not only meet but exceed customer expectations. To
-                achieve this, we collaborate closely with our vendors to maintain strict quality control measures and
-                ensure that all items are sourced responsibly and ethically.
-                This commitment extends to providing a diverse range of products that uphold the heritage and
-                craftsmanship unique to our community in Cleckhuddersfax.<br><br>
-                Our platform facilitates an environment where quality assurance is paramount. Each vendor is equipped
-                with the tools and insights needed to monitor their stock effectively, allowing for continuous
-                improvement based on consumer feedback and sales analytics.
-                By prioritizing quality at every level, Collective Shop Sphere ensures a superior shopping experience
-                that supports both our customers' satisfaction and our vendors' success.
-            </p>
-        </div>
-        <hr>
-    </section>
-
 
     <section>
     <div class="container">
-        <h2 style="text-align:center; padding:3vh;font-size: 2rem;">Our Products</h2>
+        <h2 style="text-align:center; padding:3vh;font-size: 2rem;"><?= $category_title?></h2>
         
         <div style="text-align:center; padding:1vh;">
             <label for="sort-products">Sort by:</label>
@@ -151,7 +151,7 @@ include 'header.php';
                     </div>
                     <div class="row"> <!-- Close current row and start a new row after every 3 items -->
                     <?php endif; ?>
-                    <a  href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none; color:black;" class="item" data-name="<?php echo $product['NAME']; ?>" data-price="<?php echo $product['PRICE']; ?>">
+                    <a class="product-item" href="product_detail.php?id=<?php echo $product['PRODUCTID']; ?>" style="text-decoration:none; color:black;" class="item" data-name="<?php echo $product['NAME']; ?>" data-price="<?php echo $product['PRICE']; ?>">
                         <img src="<?php echo $product['IMAGE']; ?>" alt="">
                         <h2><?php echo $product['NAME']; ?></h2>
                         <div class="price">$<?php echo number_format($product['PRICE'], 2); ?></div>
