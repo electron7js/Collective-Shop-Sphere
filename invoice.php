@@ -19,15 +19,26 @@ if (!$purchaseid) {
 $purchaseid = $_GET['purchaseid'];
 
 $pickupDetails = getPickupDetails($purchaseid);
-
+if($pickupDetails){
 $collectionDate = $pickupDetails['COLLECTION_DATE'];
 $collectionStart = $pickupDetails['COLLECTION_START'];
 $collectionEnd = $pickupDetails['COLLECTION_END'];
-
-// Convert date and time using DateTime::createFromFormat
 $collectionDateTime = DateTime::createFromFormat('d-M-y', $collectionDate);
 $collectionStartTime = DateTime::createFromFormat('d-M-y h.i.s.u A', $collectionStart);
 $collectionEndTime = DateTime::createFromFormat('d-M-y h.i.s.u A', $collectionEnd);
+}
+
+else{
+    $collectionDate = "01/01/2000";
+    $collectionStart = "01/01/2000 12.34.56.789000 PM";
+    $collectionEnd = "01/01/2000 12.34.56.789000 PM";
+    
+    $collectionDateTime = DateTime::createFromFormat('d/m/Y', $collectionDate);
+    $collectionStartTime = DateTime::createFromFormat('d/m/Y h.i.s.u A', $collectionStart);
+    $collectionEndTime = DateTime::createFromFormat('d/m/Y h.i.s.u A', $collectionEnd);
+    
+}
+// Convert date and time using DateTime::createFromFormat
 
 // Fetch purchase details
 $query = "SELECT p.purchaseid, p.purchase_date, u.username, c.firstname, c.lastname, c.address

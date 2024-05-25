@@ -54,6 +54,9 @@ oci_close($conn);
         body {
             font-family: Arial, sans-serif;
         }
+        .outer-container{
+            min-height:70vh;
+        }
         .container {
             max-width: 800px;
             margin: 50px auto;
@@ -135,7 +138,7 @@ oci_close($conn);
 <body>
 
 <?php include 'header.php'; ?>
-
+<div class="outer-container">
 <div class="container">
     <h2>All Orders</h2>
 
@@ -170,7 +173,7 @@ oci_close($conn);
         <?php endforeach; ?>
     </ul>
 </div>
-
+</div>
 <?php include 'footer.php'; ?>
 
 </body>

@@ -127,6 +127,9 @@ oci_close($conn);
             background-color: #ccc;
             color: black;
         }
+        .outer-container{
+            min-height:70vh;
+        }
     </style>
     <script>
         function fetchTraderDetails(userid) {
@@ -137,7 +140,7 @@ oci_close($conn);
 <body>
 
 <?php include 'header.php'; ?>
-
+<div class="outer-container">
 <div class="container">
     <h2>Edit Trader</h2>
     <div class="form-group">
@@ -186,7 +189,7 @@ oci_close($conn);
         </form>
     <?php endif; ?>
 </div>
-
+</div>
 <?php include 'footer.php'; ?>
 
 </body>

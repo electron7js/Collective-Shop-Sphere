@@ -131,6 +131,9 @@ oci_close($conn);
             background-color: #ccc;
             color: black;
         }
+        .outer-container{
+            min-height:65vh;
+        }
     </style>
     <script>
         function fetchCustomerDetails(userid) {
@@ -141,6 +144,7 @@ oci_close($conn);
 <body>
 
 <?php include 'header.php'; ?>
+<div class="outer-container">
 
 <div class="container">
     <h2>Edit Customer</h2>
@@ -201,7 +205,7 @@ oci_close($conn);
         </form>
     <?php endif; ?>
 </div>
-
+</div>
 <?php include 'footer.php'; ?>
 
 </body>

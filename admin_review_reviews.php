@@ -67,12 +67,15 @@ oci_close($conn);
         .review-body {
             margin-top: 10px;
         }
+        .outer-container{
+            min-height: 70vh;
+        }
     </style>
 </head>
 <body>
 
 <?php include 'header.php'; ?>
-
+<div class="outer-container">
 <div class="container">
     <h2>Review Reviews</h2>
     <ul class="review-list">
@@ -92,7 +95,7 @@ oci_close($conn);
         <?php endforeach; ?>
     </ul>
 </div>
-
+</div>
 <?php include 'footer.php'; ?>
 
 </body>

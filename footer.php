@@ -5,7 +5,7 @@
                 <li><a href="index">Home</a></li>
                 <li><a href="about">About</a></li>
                 <li><a href="shop">Shop</a></li>
-                <li><a href="help">Help</a></li>
+                <li><a href="login">Login</a></li>
             </ul> 
         </div>
     </div>

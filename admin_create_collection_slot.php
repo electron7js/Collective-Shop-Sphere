@@ -93,12 +93,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background-color: #ccc;
             color: black;
         }
+        .outer-container{
+            min-height:60vh;
+        }
     </style>
 </head>
 <body>
 
 <?php include 'header.php'; ?>
-
+<div class="outer-container">
 <div class="container">
     <h2>Create Collection Slot</h2>
     <form method="post" action="">
@@ -112,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </form>
 </div>
-
+</div>
 <?php include 'footer.php'; ?>
 
 </body>
