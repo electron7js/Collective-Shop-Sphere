@@ -117,7 +117,7 @@ include 'header.php';
                             </h2>
                             <div class="for-btn">
                                 <div class="btn-shop1">
-                                    <button class="submit">Add to Cart</button>
+                                    <button class="submit" onclick="addToBasket(<?php echo $product['PRODUCTID']; ?>)">Add to Cart</button>
                                 </div>
                                 <div class="btn-shop1-right">
                                     <button onclick="addToWishlist(<?php echo $product['PRODUCTID']; ?>)"class="submit">Add to Wishlist</button>
@@ -145,6 +145,8 @@ include 'footer.php';
 
     <script src="script.js"></script>
     <script src="wishlist.js"></script>
+    <script src="basket.js"></script>
+
     <script src="search.js"></script>
 
 

@@ -115,12 +115,19 @@ oci_close($conn);
             background-color: #ccc;
             color: black;
         }
+        .outer-container{
+            min-height:70vh;
+        }
+        .currimage{
+            width: 100%;
+            object-fit:contain;
+        }
     </style>
 </head>
 <body>
 
 <?php include 'header.php'; ?>
-
+<div class="outer-container">
 <div class="container">
     <h2>Edit Product</h2>
     <form method="post" action="update_product.php" enctype="multipart/form-data">
@@ -161,7 +168,7 @@ oci_close($conn);
             </div>
             <div class="form-group">
                 <label for="image">Current Image</label>
-                <img id="currimage">
+                <img id="currimage" class="currimage">
             </div>
             <div class="btn-group">
                 <button type="submit" class="save-btn">Save</button>
@@ -171,7 +178,7 @@ oci_close($conn);
         </div>
     </form>
 </div>
-
+</div>
 <?php include 'footer.php'; ?>
 
 <script>
