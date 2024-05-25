@@ -3,7 +3,7 @@ from PIL import Image
 
 def convert_images_to_png(folder_path):
     # Ensure the output directory exists
-    output_folder = os.path.join(folder_path, 'converted_pngs')
+    output_folder = os.path.join(folder_path, '')
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
