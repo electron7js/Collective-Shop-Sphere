@@ -41,7 +41,7 @@
     include 'config.php';
     include 'functions.php';
     // Fetch products
-    $product_query = "SELECT p.* FROM Product p JOIN Shop s ON p.shopid=s.shopid WHERE s.activestatus>0";
+    $product_query = "SELECT p.* FROM Product p JOIN Shop s ON p.shopid=s.shopid WHERE s.activestatus>0 AND ROWNUM<13";
     $product_stmt = oci_parse($conn, $product_query);
     oci_execute($product_stmt);
     ?>
