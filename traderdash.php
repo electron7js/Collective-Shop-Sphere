@@ -131,6 +131,17 @@ oci_close($conn);
             display: flex;
             flex-direction: column;
         }
+        .product-container {
+    padding: 1 rem;
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    flex-direction: column;
+}
+
+.product-list {
+margin:2rem;
+}
     </style>
 </head>
 <body>
@@ -158,6 +169,7 @@ oci_close($conn);
 
     <div class="button-group">
         <button class="action-btn" onclick="window.location.href='trader_create_offer.php'">Offers</button>
+        <button class="action-btn" onclick="window.location.href='trader_view_orders.php'">View Orders</button>
         <button class="action-btn" onclick="window.location.href='trader_edit_shop.php'">Edit Shop</button>
         <button class="action-btn" onclick="window.location.href='trader_add_product.php'">Add Product</button>
         <button class="action-btn" onclick="window.location.href='trader_edit_product.php'">Edit Product</button>
@@ -165,9 +177,9 @@ oci_close($conn);
         <button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
     </div>
 </div>
-
 <div class="product-container">
     <h2>Top Selling Products</h2>
+
     <ul class="product-list">
         <?php foreach ($topProducts as $index => $product): ?>
             <li>

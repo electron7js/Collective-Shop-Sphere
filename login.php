@@ -36,7 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Close the database connection
     oci_close($conn);
-    echo md5($password);
 }
 ?>
 
