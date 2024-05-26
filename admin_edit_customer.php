@@ -22,7 +22,7 @@ while ($customer = oci_fetch_assoc($stmt)) {
 $selectedCustomer = null;
 if (isset($_GET['userid'])) {
     $userid = $_GET['userid'];
-    $query = "SELECT u.userid, u.username, u.contactnumber, u.email, c.firstname, c.lastname, c.gender, c.dateofbirth, c.profile_image
+    $query = "SELECT u.userid, u.username, u.contactnumber, u.email, c.firstname, c.lastname, c.gender, c.dateofbirth, c.profile_image,u.activestatus
               FROM Users u
               JOIN Customer c ON u.userid = c.userid
               WHERE u.userid = :userid";
@@ -42,15 +42,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['userid'])) {
     $password = $_POST['password'];
     $email = $_POST['email'];
     $gender = $_POST['gender'];
+    $activestatus = $_POST['activestatus'];
+
     $dateofbirth = date('Y-m-d', strtotime($_POST['dateofbirth']));
 
 
-    $updateUserQuery = "UPDATE Users SET contactnumber = :contactnumber, username = :username, email = :email WHERE userid = :userid";
+    $updateUserQuery = "UPDATE Users SET contactnumber = :contactnumber, username = :username, email = :email , activestatus=:activestatus WHERE userid = :userid";
     $updateUserStmt = oci_parse($conn, $updateUserQuery);
     oci_bind_by_name($updateUserStmt, ':contactnumber', $contactnumber);
     oci_bind_by_name($updateUserStmt, ':email', $email);
     oci_bind_by_name($updateUserStmt, ':userid', $username);
     oci_bind_by_name($updateUserStmt, ':userid', $userid);
+    oci_bind_by_name($activestatus, ':userid', $activestatus);
 
     if (!empty($password)) {
         $hashed_password = md5($password);
@@ -201,6 +204,10 @@ oci_close($conn);
             <div class="button-group">
                 <button type="submit" class="save-btn">Save</button>
                 <button type="button" class="cancel-btn" onclick="window.location.href='admin_dashboard.php'">Cancel</button>
+            </div>
+            <div class="form-group">
+                <label for="location">Active Status(1 or null for active, less than 1 for inactive)</label>
+                <input type="text" id="activestatus" name="activestatus" value="<?= $selectedCustomer['ACTIVESTATUS'] ?>">
             </div>
         </form>
     <?php endif; ?>

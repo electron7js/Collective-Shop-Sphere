@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shopid'])) {
     $name = $_POST['name'];
     $description = $_POST['description'];
     $location = $_POST['location'];
-
+    $activestatus=$_POST['activestatus'];
     // Handle logo upload
     $logo = $selectedShop['LOGO'];
     if (isset($_FILES['logo']) && $_FILES['logo']['error'] == UPLOAD_ERR_OK) {
@@ -54,13 +54,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shopid'])) {
     }
 
     // Update Shop table
-    $query = "UPDATE Shop SET name = :name, description = :description, location = :location, logo = :logo WHERE shopid = :shopid";
+    $query = "UPDATE Shop SET name = :name, description = :description, location = :location, logo = :logo, activestatus=:activestatus WHERE shopid = :shopid";
     $stmt = oci_parse($conn, $query);
     oci_bind_by_name($stmt, ':name', $name);
     oci_bind_by_name($stmt, ':description', $description);
     oci_bind_by_name($stmt, ':location', $location);
     oci_bind_by_name($stmt, ':logo', $logo);
     oci_bind_by_name($stmt, ':shopid', $shopid);
+    oci_bind_by_name($stmt, ':shopid', $shopid);
+    oci_bind_by_name($stmt, ':activestatus', $activestatus);
+
 
     if (oci_execute($stmt)) {
         echo "Shop details updated successfully.";
@@ -172,6 +175,10 @@ oci_close($conn);
             <div class="form-group">
                 <label for="location">Location</label>
                 <input type="text" id="location" name="location" value="<?= $selectedShop['LOCATION'] ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Active Status(1 for active, less than 1 for inactive)</label>
+                <input type="text" id="activestatus" name="activestatus" value="<?= $selectedShop['ACTIVESTATUS'] ?>" required>
             </div>
             <div class="btn-group">
                 <button type="submit" class="save-btn">Save</button>
