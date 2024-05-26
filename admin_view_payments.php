@@ -84,8 +84,8 @@ oci_close($conn);
         <?php foreach ($payments as $payment): ?>
             <li>
                 <div class="payment-header">
-                    <div>Trader Name: <?= htmlspecialchars($payment['SHOP_NAME']) ?></div>
-                    <div>Weekly Total Amount: $<?= number_format($payment['TOTAL_AMOUNT'], 2) ?></div>
+                    <div>Trader Name: <?= htmlspecialchars($payment['SHOP_NAME']) ?><br></div>
+                    <div> &nbsp; Weekly Total Amount: $<?= number_format($payment['TOTAL_AMOUNT'], 2) ?></div>
                 </div>
             </li>
         <?php endforeach; ?>

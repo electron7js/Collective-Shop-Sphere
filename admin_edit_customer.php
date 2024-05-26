@@ -51,9 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['userid'])) {
     $updateUserStmt = oci_parse($conn, $updateUserQuery);
     oci_bind_by_name($updateUserStmt, ':contactnumber', $contactnumber);
     oci_bind_by_name($updateUserStmt, ':email', $email);
-    oci_bind_by_name($updateUserStmt, ':userid', $username);
+    oci_bind_by_name($updateUserStmt, ':username', $username);
     oci_bind_by_name($updateUserStmt, ':userid', $userid);
-    oci_bind_by_name($activestatus, ':userid', $activestatus);
+    oci_bind_by_name($updateUserStmt, ':activestatus', $activestatus);
 
     if (!empty($password)) {
         $hashed_password = md5($password);
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['userid'])) {
     }
 
 
-    $updateCustomerQuery = "UPDATE Customer SET firstname = :firstname, lastname = :lastname, gender = :gender, dateofbirth = :dateofbirth WHERE userid = :userid";
+    $updateCustomerQuery = "UPDATE Customer SET firstname = :firstname, lastname = :lastname, gender = :gender, dateofbirth = TO_DATE(:dateofbirth, 'YYYY-MM-DD') WHERE userid = :userid";
     $updateCustomerStmt = oci_parse($conn, $updateCustomerQuery);
     oci_bind_by_name($updateCustomerStmt, ':firstname', $firstname);
     oci_bind_by_name($updateCustomerStmt, ':lastname', $lastname);
@@ -201,14 +201,15 @@ oci_close($conn);
                 <label for="dateofbirth">Date of Birth</label>
                 <input type="date" id="dateofbirth" name="dateofbirth" value="<?= date('Y-m-d', strtotime($selectedCustomer['DATEOFBIRTH'])) ?>" required>
             </div>
-            <div class="button-group">
-                <button type="submit" class="save-btn">Save</button>
-                <button type="button" class="cancel-btn" onclick="window.location.href='admin_dashboard.php'">Cancel</button>
-            </div>
             <div class="form-group">
                 <label for="location">Active Status(1 or null for active, less than 1 for inactive)</label>
                 <input type="text" id="activestatus" name="activestatus" value="<?= $selectedCustomer['ACTIVESTATUS'] ?>">
             </div>
+            <div class="button-group">
+                <button type="submit" class="save-btn">Save</button>
+                <button type="button" class="cancel-btn" onclick="window.location.href='admin_dashboard.php'">Cancel</button>
+            </div>
+           
         </form>
     <?php endif; ?>
 </div>
